@@ -37,7 +37,7 @@ public class mainParagon {
     public static void main(String[] args) throws IOException, XMLStreamException {
         
         medList = readMeds();
-        PrintStream out = new PrintStream(new FileOutputStream("outputN.txt"));
+        PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
         System.setOut(out);
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");

@@ -22,6 +22,8 @@ public class Patient {
     boolean cancer; // malignant & !prostate & !basal cell | returns false if condition is present
     float bmi;
     boolean inpatient;
+    boolean amt;
+    boolean stc;
     labPatient lp;
     
     List<Float> lvef = new ArrayList<Float>();
@@ -34,6 +36,8 @@ public class Patient {
         this.T_ICD = true;
         this.cancer = true;
         this.bmi = -1;
+        this.amt = true;
+        this.stc = true;
         this.inpatient = true; //Change this to false if you need to use Step 12
     }
     
@@ -45,6 +49,8 @@ public class Patient {
         this.T_ICD = true;
         this.cancer = true;
         this.bmi = -1;
+        this.amt = true;
+        this.stc = true;
         this.inpatient = true; //Change this to false if you need to use Step 12
     }
     
@@ -57,6 +63,8 @@ public class Patient {
         this.T_ICD = true;
         this.cancer = true;
         this.bmi = -1;
+        this.amt = true;
+        this.stc = true;
         this.inpatient = true; //Change this to false if you need to use Step 12
     }
     

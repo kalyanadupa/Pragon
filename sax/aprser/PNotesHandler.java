@@ -84,12 +84,6 @@ public class PNotesHandler extends DefaultHandler {
         else if (bnote_text) {
             
             String notesText = new String(ch, start, length);
-            if(currPat == 3900782){
-                
-                if(notesText.contains("yolodeha"))
-                    System.out.println("Working");
-                
-            }
             if(pT.searchwithoutNegation(notesText, "Angioedema")){
                 if(patMap.containsKey(currPat)){
                     Patient px = patMap.get(currPat);
