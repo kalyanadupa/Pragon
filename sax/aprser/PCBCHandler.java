@@ -115,10 +115,12 @@ public class PCBCHandler extends DefaultHandler {
                             px.Hemoglobin = labValue;
                         }
                     }
-                    if (labName.contains("GFR")) {
+                    //AFRICAN AMERICAN
+                    if ((labName.contains("GFR")) && (labName.toUpperCase().contains("AFRICAN AMERICAN")) ) {
                         if (px.gfr == -1) {
                             labValue = Float.parseFloat(strBMI);
-                            px.gfr = labValue;
+                            if(labValue < 99999)
+                                px.gfr = labValue;
                         }
                     }
                     if ((labName.contains("BNP")) && (labName.toLowerCase().contains("natriuretic"))) {
