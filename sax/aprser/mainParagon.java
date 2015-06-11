@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +37,7 @@ public class mainParagon {
     static List<String> diuList = new ArrayList<String>();
     static List<String> BPMedList = new ArrayList<String>();
     static List<String> crnt; 
-    public static void main(String[] args) throws IOException, XMLStreamException {
+    public static void main(String[] args) throws IOException, XMLStreamException, FileNotFoundException, ParseException {
         
         medList = readMeds();
         diuList = readDiuretics();
@@ -47,7 +48,7 @@ public class mainParagon {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         System.out.println(sdf.format(cal.getTime()));
         System.out.println();
-        
+        myXMLParser mxp = new myXMLParser();
         try {
             File inputFile = new File("Dataset/Paragon BMI and Other Vitals.xml");
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -89,16 +90,21 @@ public class mainParagon {
         
 //        //Paragon Notes 
         
-        try {
-            File inputFile = new File("Dataset/Paragon Notes.xml");
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            PNotesHandler pNotesHandler = new PNotesHandler();
-            saxParser.parse(inputFile, pNotesHandler);
-            patMap = pNotesHandler.getMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            File inputFile = new File("Dataset/Paragon Notes.xml");
+//            SAXParserFactory factory = SAXParserFactory.newInstance();
+//            SAXParser saxParser = factory.newSAXParser();
+//            PNotesHandler pNotesHandler = new PNotesHandler();
+//            saxParser.parse(inputFile, pNotesHandler);
+//            patMap = pNotesHandler.getMap();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        
+        
+        // Alternative PN Approach 
+        patMap = mxp.parsePN(patMap);
+        
         System.out.println("PN  Done");
         
 
@@ -129,7 +135,7 @@ public class mainParagon {
         
         // Another Alternate version of TE - Regex Parser
         
-        myXMLParser mxp = new myXMLParser();
+        
         patMap = mxp.parseTE(patMap);
         
         System.out.println("TE Done");

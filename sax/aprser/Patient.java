@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this license header/choose License Headers in Project Properties.
+ * To change this template file/choose Tools | Templates
  * and open the template in the editor.
  */
 package sax.aprser;
@@ -24,6 +24,7 @@ public class Patient {
     boolean inpatient;
     boolean amt;
     boolean stc;
+    int sbp;
     labPatient lp;
     
     List<Float> lvef = new ArrayList<Float>();
@@ -38,6 +39,7 @@ public class Patient {
         this.bmi = -1;
         this.amt = true;
         this.stc = true;
+        this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
     }
     
@@ -51,6 +53,7 @@ public class Patient {
         this.bmi = -1;
         this.amt = true;
         this.stc = true;
+        this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
     }
     
@@ -65,6 +68,7 @@ public class Patient {
         this.bmi = -1;
         this.amt = true;
         this.stc = true;
+        this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
     }
     
@@ -125,6 +129,16 @@ public class Patient {
             reason.add("Not inpatient with HF in last 9Months (Step 12)");
         if(!this.lp.med)
             reason.add("No treatment with ACEI/Renin/ARB (Step 13)");
+        
+        if(!this.lp.diu)
+            reason.add("No Diuretics ");
+        if((this.lp.BPmedNo <3) && (this.sbp > 150))
+            reason.add("BP value is high without medication (Step 15)");
+        
+        if(!this.amt)
+            reason.add("aortic/mitral/tricuspid stenosis or regurgitation present (Step 16)");
+        if(!this.stc)
+            reason.add("Stroke/transient ischemic attack/carotid surgery/carotid angioplasty present (Step 17)");
         
 //        if(missing){
 //            System.out.println(this.Pat_ID + "\t" + this.crnt + "\t" + "VALUES MISSING" + "\t" + reason.toString());

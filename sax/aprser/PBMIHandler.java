@@ -18,6 +18,7 @@ public class PBMIHandler extends DefaultHandler {
     boolean bpat_id = false;
     boolean bBMI = false;
     boolean bcrnt = false;
+    boolean bBP = false;
     String currCRNT = "null";
 //    boolean bMarks = false;
     mainParagon mP = new mainParagon();
@@ -44,6 +45,9 @@ public class PBMIHandler extends DefaultHandler {
         } 
         else if (qName.equalsIgnoreCase("crnt_mrn")) {
             bcrnt = true;
+        }
+        else if (qName.equalsIgnoreCase("bp_systolic")) {
+            bBP = true;
         }
     }
 
@@ -111,7 +115,22 @@ public class PBMIHandler extends DefaultHandler {
             
             bBMI = false;
         }
+        else if (bBP) {
+            String strBMI = new String(ch, start, length);
 
+//            System.out.println("Diagnosis Name: "s
+//                    + dxName +" pi "+ pat_ID);     
+            int fbmi = Integer.valueOf(strBMI);
+            if (patMap.containsKey(currPat)) {
+                Patient px = patMap.get(currPat);
+
+                if (px.sbp == -1) {
+                    px.sbp = fbmi;
+                }
+            }
+
+            bBP = false;
+        }
     }
     
     public Map<Integer, Patient> getMap() {
