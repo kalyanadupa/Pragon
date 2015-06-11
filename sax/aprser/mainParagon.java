@@ -33,10 +33,14 @@ public class mainParagon {
     static Map<Integer, Patient> patMap = new HashMap<Integer, Patient>();
     static Map<String, labPatient> labMap = new HashMap<String, labPatient>();
     static List<String> medList = new ArrayList<String>();
+    static List<String> diuList = new ArrayList<String>();
+    static List<String> BPMedList = new ArrayList<String>();
     static List<String> crnt; 
     public static void main(String[] args) throws IOException, XMLStreamException {
         
         medList = readMeds();
+        diuList = readDiuretics();
+        BPMedList = readBPMeds();
         PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
         System.setOut(out);
         Calendar cal = Calendar.getInstance();
@@ -227,6 +231,38 @@ public class mainParagon {
         
         return medList;
     }
+    public List<String> getDiuList(){
+        
+        return diuList;
+    }
+    
+    public List<String> getBPList() {
+
+        return BPMedList;
+    }
+    public static List<String> readDiuretics() throws FileNotFoundException, IOException{
+        String line;
+        
+        FileReader fileReader   = new FileReader("Dataset/diuretcs.txt");
+
+
+        BufferedReader bufferedReader   = new BufferedReader(fileReader);
+        
+        
+        
+        while ((line = bufferedReader.readLine()) != null) {
+            String broken[] = line.split(",");
+            for(String str: broken){
+                if(!diuList.contains(str)){
+                    diuList.add(str);
+                    
+                }
+            }
+        }
+        bufferedReader.close();
+        return diuList;     
+        
+    }
     
     public static List<String> readMeds() throws FileNotFoundException, IOException{
         String line;
@@ -235,7 +271,9 @@ public class mainParagon {
 
 
         BufferedReader bufferedReader   = new BufferedReader(fileReader);
-
+        
+        
+        
         while ((line = bufferedReader.readLine()) != null) {
             String broken[] = line.split(",");
             for(String str: broken){
@@ -249,7 +287,25 @@ public class mainParagon {
         return medList;     
         
     }
-    
-    
+    //BPmeds
+    public static List<String> readBPMeds() throws FileNotFoundException, IOException {
+        String line;
+
+        FileReader fileReader = new FileReader("Dataset/BPmeds.txt");
+
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        while ((line = bufferedReader.readLine()) != null) {
+            String broken[] = line.split(",");
+            for (String str : broken) {
+                if (!BPMedList.contains(str)) {
+                    BPMedList.add(str);
+                }
+            }
+        }
+        bufferedReader.close();
+        return BPMedList;
+
+    }
 }
 

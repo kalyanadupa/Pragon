@@ -25,6 +25,8 @@ public class PMedHandler extends DefaultHandler {
     
     Map<String, labPatient> labMap = mP.getLabMap();
     List<String> medList = mP.getMedList();
+    List<String> diuList = mP.getDiuList();
+    List<String> BPMedList = mP.getBPList();
     List<String> crnt = mP.getCrnt();
     String lab_ID = "NULL";
     String labGenName = "NULL";
@@ -95,14 +97,30 @@ public class PMedHandler extends DefaultHandler {
             labGenName = labGenName.toLowerCase();
             if(labMap.containsKey(currPat)){
                 labPatient px = labMap.get(currPat);
-                //if(!px.med){
+                if(!px.med){
                     for(String str : medList){
                         if(labGenName.contains(str.toLowerCase())){
                             px.med = true;
                             break;
                         }                            
                     }
-                //}
+                }
+                if (!px.diu) {
+                    for (String str : diuList) {
+                        if (labGenName.contains(str.toLowerCase())) {
+                            px.diu = true;
+                            break;
+                        }
+                    }
+                }
+                if (px.BPmedNo < 4) {
+                    for (String str : BPMedList) {
+                        if (labGenName.contains(str.toLowerCase())) {
+                            px.BPmedNo++;
+                            break;
+                        }
+                    }
+                }
             }
             bGenName = false;            
         } 
@@ -114,6 +132,22 @@ public class PMedHandler extends DefaultHandler {
                     for (String str : medList) {
                         if (tradeName.toLowerCase().contains(str.toLowerCase())) {
                             px.med = true;
+                            break;
+                        }
+                    }
+                }
+                if (!px.diu) {
+                    for (String str : diuList) {
+                        if (tradeName.contains(str.toLowerCase())) {
+                            px.diu = true;
+                            break;
+                        }
+                    }
+                }
+                if (px.BPmedNo < 4) {
+                    for (String str : BPMedList) {
+                        if (tradeName.contains(str.toLowerCase())) {
+                            px.BPmedNo++;
                             break;
                         }
                     }

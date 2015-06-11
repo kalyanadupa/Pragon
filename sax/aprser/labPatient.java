@@ -15,6 +15,8 @@ public class labPatient {
     float gfr;
     float bnp;
     boolean med;
+    boolean diu;
+    int BPmedNo;
     
     public labPatient(){
         this.id  = null;
@@ -22,6 +24,8 @@ public class labPatient {
         this.gfr = -1;
         this.Hemoglobin = -1;   
         this.med = false;
+        this.diu = false;
+        this.BPmedNo = 0;
     }
     
     public void labPrint(){
