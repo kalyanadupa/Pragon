@@ -79,14 +79,18 @@ public class myXMLParser {
                 }
                 Integer currPat = Integer.valueOf(tagValues.get(i - 1));
                 String notesText = tagValues.get(i + 1);
-                if ((pT.searchwithoutNegation(notesText, "aortic stenosis")) || (pT.searchwithoutNegation(notesText, "mitral stenosis")) || (pT.searchwithoutNegation(notesText, "tricuspid stenosis"))) {
-                    if ((pT.searchwithoutNegation(notesText, "aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "tricuspid regurgitation"))) {
-                        if (patMap.containsKey(currPat)) {
-                            Patient px = patMap.get(currPat);
-                            px.amt = false;
-                        }
+                if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis"))) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        px.amt = false;
                     }                    
-                }                
+                }
+                if ((pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        px.amt = false;
+                    }
+                }
             }
         }
         
@@ -164,24 +168,24 @@ public class myXMLParser {
                     for(String eachS : sentences){
                         System.out.println(eachS); 
                        try{
-                            if (pT.searchWithNegation(eachS, "transplant")) {
-                                if (patMap.containsKey(currPat)) {
-                                    Patient px = patMap.get(currPat);
-                                    px.T_ICD = false;
-                                }
-                            } else if (pT.searchWithNegation(eachS, "ICD")) {
-                                if (patMap.containsKey(currPat)) {
-                                    Patient px = patMap.get(currPat);
-                                    px.T_ICD = false;
-                                }
-                            }
-                            if (pT.searchWithNegation(eachS, "implantable cardioverter defibrillator")) {
-
-                                if (patMap.containsKey(currPat)) {
-                                    Patient px = patMap.get(currPat);
-                                    px.T_ICD = false;
-                                }
-                            }
+//                            if (pT.searchWithNegation(eachS, "transplant")) {
+//                                if (patMap.containsKey(currPat)) {
+//                                    Patient px = patMap.get(currPat);
+//                                    px.T_ICD = false;
+//                                }
+//                            } else if (pT.searchWithNegation(eachS, "ICD")) {
+//                                if (patMap.containsKey(currPat)) {
+//                                    Patient px = patMap.get(currPat);
+//                                    px.T_ICD = false;
+//                                }
+//                            }
+//                            if (pT.searchWithNegation(eachS, "implantable cardioverter defibrillator")) {
+//
+//                                if (patMap.containsKey(currPat)) {
+//                                    Patient px = patMap.get(currPat);
+//                                    px.T_ICD = false;
+//                                }
+//                            }
 
                             // Checking for Cancer Step 8
                             if ((pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {

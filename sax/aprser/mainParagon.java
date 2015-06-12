@@ -72,6 +72,9 @@ public class mainParagon {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+        out = new PrintStream(new FileOutputStream("delete.txt"));
+        System.setOut(out);
+        
         
         // PPL Alternative - Stax Parser
         staxPL ste = new staxPL();

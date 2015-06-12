@@ -60,17 +60,7 @@ public class staxPL {
                 case XMLStreamConstants.END_ELEMENT:
                     switch (reader.getLocalName()) {
                         case "Detail":
-                            if(patMap.containsKey(currPat.Pat_ID)){
-                                Patient px = patMap.get(currPat.Pat_ID);
-                                if(!currPat.lvef.isEmpty()){
-                                    List<Float> tempList = new ArrayList<Float>();
-                                    tempList.addAll(px.lvef);
-                                    tempList.addAll(currPat.lvef);
-                                    px.lvef = tempList;
-                                    System.out.println(tempList.toString() +" | " + currPat.lvef.toString());
-                                }
-                                
-                            }
+                            
                             break;
                         case "pat_id":
                             Integer id = Integer.valueOf(tagContent);
@@ -84,25 +74,38 @@ public class staxPL {
                                 String dxName = tagContent;
                                 
                                 if (pT.hasHeartFailure(dxName)) {
-                                    if (patMap.containsKey(currPat)) {
-                                        Patient px = patMap.get(currPat);
+                                    if (patMap.containsKey(currPat.Pat_ID)) {
+                                        Patient px = patMap.get(currPat.Pat_ID);
                                         px.HF = true;
                                     }
                                 }
                                 if (pT.searchWithNegation(dxName, "transplant")) {
-                                    if (patMap.containsKey(currPat)) {
-                                        Patient px = patMap.get(currPat);
+                                    if ((currPat.Pat_ID == 4123629) || (currPat.Pat_ID == 1945618) || (currPat.Pat_ID == 1464556)) {
+                                        System.out.println(currPat.Pat_ID);
+                                        System.out.println(dxName);
+                                    }
+                                    if (patMap.containsKey(currPat.Pat_ID)) {
+                                        Patient px = patMap.get(currPat.Pat_ID);
                                         px.T_ICD = false;
                                     }
                                 } else if (pT.searchWithNegation(dxName, "ICD")) {
-                                    if (patMap.containsKey(currPat)) {
-                                        Patient px = patMap.get(currPat);
+                                    if ((currPat.Pat_ID == 4123629) || (currPat.Pat_ID == 1945618) || (currPat.Pat_ID == 1464556)) {
+                                        System.out.println(currPat.Pat_ID);
+                                        System.out.println(dxName);
+                                    }
+                                    if (patMap.containsKey(currPat.Pat_ID)) {
+                                        
+                                        Patient px = patMap.get(currPat.Pat_ID);
                                         px.T_ICD = false;
                                     }
                                 }
                                 if (pT.searchWithNegation(dxName, "implantable cardioverter defibrillator")) {
-                                    if (patMap.containsKey(currPat)) {
-                                        Patient px = patMap.get(currPat);
+                                    if ((currPat.Pat_ID == 4123629) || (currPat.Pat_ID == 1945618) || (currPat.Pat_ID == 1464556)) {
+                                        System.out.println(currPat.Pat_ID);
+                                        System.out.println(dxName);
+                                    }
+                                    if (patMap.containsKey(currPat.Pat_ID)) {
+                                        Patient px = patMap.get(currPat.Pat_ID);
                                         px.T_ICD = false;
                                     }
                                 }
@@ -111,8 +114,8 @@ public class staxPL {
                                 if(!vDate.isEmpty()){
                                     if(td.nMonth(vDate) < 120){
                                         if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate")) && (!pT.searchWithNegation(dxName, "basal cell"))) {
-                                            if (patMap.containsKey(currPat)) {
-                                                Patient px = patMap.get(currPat);
+                                            if (patMap.containsKey(currPat.Pat_ID)) {
+                                                Patient px = patMap.get(currPat.Pat_ID);
                                                 px.cancer = false;
                                             }
                                         }
