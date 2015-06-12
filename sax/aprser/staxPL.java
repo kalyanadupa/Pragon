@@ -16,13 +16,15 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import negex.paragonTest;
 
-public class staxTE {
+public class staxPL {
 
     public static void main(String[] args) {
         
@@ -34,8 +36,9 @@ public class staxTE {
         paragonTest pT = new paragonTest();
         XMLInputFactory factory = XMLInputFactory.newInstance();
 //        File f = new File("employee.xml");
-        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream("Dataset/Paragon Text Entries New.xml"));
-
+        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream("Dataset/Paragon Problem List.xml"));
+        String vDate = null;
+        testDate td = new testDate();
         while (reader.hasNext()) {
             int event = reader.next();
 
@@ -43,7 +46,7 @@ public class staxTE {
                 case XMLStreamConstants.START_ELEMENT:
                     if ("Detail".equals(reader.getLocalName())) {
                         currPat = new Patient();
-                        
+                        vDate = null;
                     }
                     if ("Detail_Collection".equals(reader.getLocalName())) {
 //                        empList = new ArrayList<>();
@@ -73,17 +76,52 @@ public class staxTE {
                             Integer id = Integer.valueOf(tagContent);
                             currPat.Pat_ID = id;
                             break;
-                        case "crnt_mrn":
-                            currPat.crnt = tagContent;
+                        case "noted_date":
+                            vDate = tagContent;
                             break;
-                        case "echo_text":
-                            String dxName = tagContent;
-                            System.out.println("***");
-                            System.out.println(currPat.Pat_ID);
-                            System.out.println("");
-                            System.out.println(tagContent);
-                            System.out.println("\n***\n");
-                            currPat.lvef = pT.getLVEF(dxName, currPat.lvef);
+                        case "dx_name":
+                            try {
+                                String dxName = tagContent;
+                                
+                                if (pT.hasHeartFailure(dxName)) {
+                                    if (patMap.containsKey(currPat)) {
+                                        Patient px = patMap.get(currPat);
+                                        px.HF = true;
+                                    }
+                                }
+                                if (pT.searchWithNegation(dxName, "transplant")) {
+                                    if (patMap.containsKey(currPat)) {
+                                        Patient px = patMap.get(currPat);
+                                        px.T_ICD = false;
+                                    }
+                                } else if (pT.searchWithNegation(dxName, "ICD")) {
+                                    if (patMap.containsKey(currPat)) {
+                                        Patient px = patMap.get(currPat);
+                                        px.T_ICD = false;
+                                    }
+                                }
+                                if (pT.searchWithNegation(dxName, "implantable cardioverter defibrillator")) {
+                                    if (patMap.containsKey(currPat)) {
+                                        Patient px = patMap.get(currPat);
+                                        px.T_ICD = false;
+                                    }
+                                }
+
+                                // Checking for Cnacer Step 8
+                                if(vDate != null){
+                                    if(td.nMonth(vDate) < 120){
+                                        if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate")) && (!pT.searchWithNegation(dxName, "basal cell"))) {
+                                            if (patMap.containsKey(currPat)) {
+                                                Patient px = patMap.get(currPat);
+                                                px.cancer = false;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            } catch (Exception ex) {
+                                Logger.getLogger(PListHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             break;
                     }
                     break;

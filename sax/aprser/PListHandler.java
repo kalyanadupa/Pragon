@@ -18,13 +18,14 @@ public class PListHandler extends DefaultHandler {
 
     boolean bdx_name = false;
     boolean bpat_id = false;
+    boolean bnd = false;
 //    boolean bNickName = false;
 //    boolean bMarks = false;
     mainParagon mP = new mainParagon();
     
     Map<Integer, Patient> patMap = mP.getMap();
     String pat_ID = "NULL";
-    
+    String vDate = "NULL";
     int currPat = 0;
     paragonTest pT = new paragonTest();
     @Override
@@ -39,9 +40,11 @@ public class PListHandler extends DefaultHandler {
         else if (qName.equalsIgnoreCase("dx_name")) {
             bdx_name = true;
         } 
-//            else if (qName.equalsIgnoreCase("nickname")) {
-//            bNickName = true;
-//        } else if (qName.equalsIgnoreCase("marks")) {
+            else if (qName.equalsIgnoreCase("noted_date")) {
+            bnd = true;
+        } 
+            
+//            else if (qName.equalsIgnoreCase("marks")) {
 //            bMarks = true;
 //        }
     }
@@ -72,6 +75,11 @@ public class PListHandler extends DefaultHandler {
 
             bpat_id = false;
         } 
+        else if (bnd) {
+            vDate = new String(ch, start, length);
+
+            bpat_id = false;
+        }
         else if (bdx_name) {
             try {
                 String dxName = new String(ch, start, length);
@@ -114,9 +122,6 @@ public class PListHandler extends DefaultHandler {
                 
                 // Checking for Cnacer Step 8
                 if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate")) && (!pT.searchWithNegation(dxName, "basal cell"))) {
-                    if (currPat == 772126) {
-                        System.out.println("bhft" + dxName);
-                    }
                     if (patMap.containsKey(currPat)) {
                         Patient px = patMap.get(currPat);
                         px.cancer = false;

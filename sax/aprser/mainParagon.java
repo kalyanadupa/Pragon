@@ -199,24 +199,24 @@ public class mainParagon {
         for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
             Patient px = entry.getValue();
             px.lp = labMap.get(px.crnt);
-            px.patPrint();
+//            px.patPrint();
         }
         
         //Delete the following stuff 
         
-//        String fileName = "tempMRN.txt";
-//        FileReader fileReader = new FileReader(fileName);
-//        BufferedReader bufferedReader = new BufferedReader(fileReader);
-//        String line;
-//        
-//        while ((line = bufferedReader.readLine()) != null) {
-//            for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
-//                Patient px = entry.getValue();
-//                if(px.crnt.contains(line)){
-//                    px.patPrint();
-//                }
-//            }
-//        }
+        String fileName = "tempMRN.txt";
+        FileReader fileReader = new FileReader(fileName);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        
+        while ((line = bufferedReader.readLine()) != null) {
+            for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
+                Patient px = entry.getValue();
+                if(px.crnt.contains(line)){
+                    px.patPrint();
+                }
+            }
+        }
         
     }
     

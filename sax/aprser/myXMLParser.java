@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import negex.paragonTest;
+import opennlp.tools.sentdetect.SentenceDetectorME;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -29,7 +31,8 @@ import negex.paragonTest;
  * @author aka324
  */
 public class myXMLParser {
-
+    
+    
     
     public Map<Integer, Patient> parseTE(Map<Integer,Patient> patMap) throws FileNotFoundException, IOException{
         String fileName = "Dataset/Paragon Text Entries.xml";
@@ -87,13 +90,14 @@ public class myXMLParser {
             }
         }
         
-        out = new PrintStream(new FileOutputStream("output.txt"));
-        System.setOut(out);
+//        out = new PrintStream(new FileOutputStream("output.txt"));
+//        System.setOut(out);
         return patMap;
     }
     
     
     public Map<Integer, Patient> parsePN(Map<Integer, Patient> patMap) throws FileNotFoundException, IOException, ParseException {
+        
         String fileName = "Dataset/Paragon Notes.xml";
         FileReader fileReader = new FileReader(fileName);
         paragonTest pT = new paragonTest();
@@ -118,12 +122,12 @@ public class myXMLParser {
         out = new PrintStream(new FileOutputStream("checkXMLParserOutput.txt"));
         System.setOut(out);
         String str = "";
-
 //        while ((str = bufferedReader.readLine()) != null) {
 //            System.out.println(Arrays.toString(getTagValues(str).toArray()));
 //        }
         str = bufferedReader.readLine();
         List<String> tagValues = getTagValuesPN(str);
+        
         for (int i = 0; i < tagValues.size(); i = i + 2) {
             if (tagValues.get(i).equalsIgnoreCase("note_text")) {
                 Integer currPat = Integer.valueOf(tagValues.get(i-3));
@@ -156,49 +160,68 @@ public class myXMLParser {
                     
                 }
                 try{
-                    if (pT.searchWithNegation(notesText, "transplant")) {
-                        if (patMap.containsKey(currPat)) {
-                            Patient px = patMap.get(currPat);
-                            px.T_ICD = false;
-                        }
-                    } else if (pT.searchWithNegation(notesText, "ICD")) {
-                        if (patMap.containsKey(currPat)) {
-                            Patient px = patMap.get(currPat);
-                            px.T_ICD = false;
-                        }
-                    }
-                    if (pT.searchWithNegation(notesText, "implantable cardioverter defibrillator")) {
-
-                        if (patMap.containsKey(currPat)) {
-                            Patient px = patMap.get(currPat);
-                            px.T_ICD = false;
-                        }
-                    }
-
-                    // Checking for Cancer Step 8
-                    if ((pT.searchWithNegation(notesText, "malignant")) && (!pT.searchWithNegation(notesText, "prostate")) && (!pT.searchWithNegation(notesText, "basal cell"))) {
-                        testDate td = new testDate();
-                        if (td.nMonth(vDate) <= 60) { // The month limit is taken as 60 because, it should be within last 5 years(60 months)
-                            if (patMap.containsKey(currPat)) {
-                                Patient px = patMap.get(currPat);
-                                px.cancer = false;
+                    List<String> sentences = getScentences(notesText);
+                    for(String eachS : sentences){
+                        System.out.println(eachS); 
+                       try{
+                            if (pT.searchWithNegation(eachS, "transplant")) {
+                                if (patMap.containsKey(currPat)) {
+                                    Patient px = patMap.get(currPat);
+                                    px.T_ICD = false;
+                                }
+                            } else if (pT.searchWithNegation(eachS, "ICD")) {
+                                if (patMap.containsKey(currPat)) {
+                                    Patient px = patMap.get(currPat);
+                                    px.T_ICD = false;
+                                }
                             }
-                        }                       
+                            if (pT.searchWithNegation(eachS, "implantable cardioverter defibrillator")) {
+
+                                if (patMap.containsKey(currPat)) {
+                                    Patient px = patMap.get(currPat);
+                                    px.T_ICD = false;
+                                }
+                            }
+
+                            // Checking for Cancer Step 8
+                            if ((pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
+                                testDate td = new testDate();
+                                if (td.nMonth(vDate) <= 60) { // The month limit is taken as 60 because, it should be within last 5 years(60 months)
+                                    if (patMap.containsKey(currPat)) {
+                                        Patient px = patMap.get(currPat);
+                                        px.cancer = false;
+                                    }
+                                }
+                            }
+                        }
+                        catch(Exception ex){
+                            //System.out.println("Error: " + eachS);
+                        }
                     }
+                    
                 }
                 catch (Exception ex) {
-                    Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PEncountersHandler.class.getName() ).log(Level.SEVERE, null, ex);
                 }
                 
             }
         }
-        out = new PrintStream(new FileOutputStream("output.txt"));
-        System.setOut(out);
+//        out = new PrintStream(new FileOutputStream("output.txt"));
+//        System.setOut(out);
         return patMap;
     }
     
+    public static List<String> getScentences(String str){
+        List<String> allL = new ArrayList<String>();
+        Pattern re = Pattern.compile("[^.!?\\s][^.!?]*(?:[.!?](?!['\"]?\\s|$)[^.!?]*)*[.!?]?['\"]?(?=\\s|$)", Pattern.MULTILINE | Pattern.COMMENTS);
+        Matcher reMatcher = re.matcher(str);
+        while (reMatcher.find()) {
+            allL.add(reMatcher.group());
+        }
+        return allL;
+    }
 
-    private static List<String> getTagValues(final String str) {
+    private List<String> getTagValues(final String str) {
         List<String> tagValues = new ArrayList<String>();
 //        Matcher matcher = TAG_REGEX.matcher(str);
 //        while (matcher.find()) {

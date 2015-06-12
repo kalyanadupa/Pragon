@@ -152,9 +152,9 @@ public class Patient {
             
             
         if(reason.isEmpty())
-            System.out.println(this.crnt + "\t" + "YES" + "\t" + this.lvef.toString());
+            System.out.println(this.crnt + "\t" + "YES" );
         else
-            System.out.println(this.crnt + "\t" + "NO" + "\t" + reason.toString() + "\t" + this.lvef.toString());
+            System.out.println(this.crnt + "\t" + "NO" + "\t" + reason.toString());
         
         
                 
