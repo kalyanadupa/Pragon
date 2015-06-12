@@ -29,7 +29,7 @@ public class staxPL {
     public static void main(String[] args) {
         
     }
-    public Map<Integer, Patient> parseTE(Map<Integer, Patient> patMap)  throws XMLStreamException, FileNotFoundException {
+    public Map<Integer, Patient> parsePL(Map<Integer, Patient> patMap)  throws XMLStreamException, FileNotFoundException {
 //        List<Employee> empList = null;
         Patient currPat = null;
         String tagContent = null;
@@ -108,7 +108,7 @@ public class staxPL {
                                 }
 
                                 // Checking for Cnacer Step 8
-                                if(vDate != null){
+                                if(!vDate.isEmpty()){
                                     if(td.nMonth(vDate) < 120){
                                         if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate")) && (!pT.searchWithNegation(dxName, "basal cell"))) {
                                             if (patMap.containsKey(currPat)) {

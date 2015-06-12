@@ -62,16 +62,20 @@ public class mainParagon {
         System.out.println("Age Done");
 //        //Paragon Problem List Deidentified
         
-        try {
-            File inputFile = new File("Dataset/Paragon Problem List.xml");
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            PListHandler pListHandler = new PListHandler();
-            saxParser.parse(inputFile, pListHandler);
-            patMap = pListHandler.getMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            File inputFile = new File("Dataset/Paragon Problem List.xml");
+//            SAXParserFactory factory = SAXParserFactory.newInstance();
+//            SAXParser saxParser = factory.newSAXParser();
+//            PListHandler pListHandler = new PListHandler();
+//            saxParser.parse(inputFile, pListHandler);
+//            patMap = pListHandler.getMap();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        
+        // PPL Alternative - Stax Parser
+        staxPL ste = new staxPL();
+        patMap = ste.parsePL(patMap);
         
         System.out.println("PPL  Done");
 //                //Paragon Encounters

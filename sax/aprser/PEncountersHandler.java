@@ -112,11 +112,22 @@ public class PEncountersHandler extends DefaultHandler {
                 
                 // Checking for Cnacer Step 8
                 if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate"))  && (!pT.searchWithNegation(dxName, "basal cell")) ) {
-                    
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.cancer = false;
+                    try {
+                        testDate td = new testDate();
+                        if (td.nMonth(vDate) <= 60) {
+
+                            if (patMap.containsKey(currPat)) {
+                                Patient px = patMap.get(currPat);
+                                px.cancer = false;
+                            }
+                        }
+                    } catch (ParseException ex) {
+                        Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
+                    
+                    
+                    
                 }
                 if (vType.toLowerCase().contains("inpatient")) {
                     try {
