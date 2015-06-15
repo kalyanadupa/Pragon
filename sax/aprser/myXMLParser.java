@@ -147,7 +147,7 @@ public class myXMLParser {
                         Patient px = patMap.get(currPat);
                         px.apr = false;
                     }
-                } else if (pT.searchwithoutNegation(notesText, "Renal artery stenosis")) {
+                } else if (pT.searchwithoutNegation(notesText, "bilateral Renal artery stenosis")) {
                     if (patMap.containsKey(currPat)) {
                         Patient px = patMap.get(currPat);
                         px.apr = false;

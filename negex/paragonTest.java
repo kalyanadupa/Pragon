@@ -124,6 +124,15 @@ public class paragonTest {
             }
             return false;
         }
+        
+        if (words.length == 4) {
+            Pattern p1 = Pattern.compile("\\s+" + words[0] + "\\s+" + words[1] + "\\s+"+ words[2] + "\\s+" + "\\s+"+ words[3] + "\\s+");
+            Matcher m1 = p1.matcher(doc.toLowerCase());
+            if (m1.find()) {
+                return true;
+            }
+            return false;
+        }
         return false;       
     }
     
