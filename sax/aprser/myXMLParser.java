@@ -79,18 +79,18 @@ public class myXMLParser {
                 }
                 Integer currPat = Integer.valueOf(tagValues.get(i - 1));
                 String notesText = tagValues.get(i + 1);
-                if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis"))) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.amt = false;
-                    }                    
-                }
-                if ((pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.amt = false;
+                if (patMap.containsKey(currPat)){
+                    Patient px = patMap.get(currPat);
+                    if(px.amt == -1){
+                        if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
+                        px.amt = 1;
                     }
+                    else{
+                        px.amt = 0;
+                    }
+                    } 
                 }
+                
             }
         }
         

@@ -22,7 +22,7 @@ public class Patient {
     boolean cancer; // malignant & !prostate & !basal cell | returns false if condition is present
     float bmi;
     boolean inpatient;
-    boolean amt;
+    int amt; // amt value changes from -1 to 0 or 1 for the first entry in TE. 0 = amt absent 1 = amt present 
     boolean stc;
     int sbp;
     labPatient lp;
@@ -37,7 +37,7 @@ public class Patient {
         this.T_ICD = true;
         this.cancer = true;
         this.bmi = -1;
-        this.amt = true;
+        this.amt = -1;
         this.stc = true;
         this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
@@ -51,7 +51,7 @@ public class Patient {
         this.T_ICD = true;
         this.cancer = true;
         this.bmi = -1;
-        this.amt = true;
+        this.amt = -1;
         this.stc = true;
         this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
@@ -66,7 +66,7 @@ public class Patient {
         this.T_ICD = true;
         this.cancer = true;
         this.bmi = -1;
-        this.amt = true;
+        this.amt = -1;
         this.stc = true;
         this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
@@ -135,7 +135,7 @@ public class Patient {
         if((this.lp.BPmedNo <3) && (this.sbp > 150))
             reason.add("BP value is high without medication (Step 15)");
         
-        if(!this.amt)
+        if(this.amt == 1)
             reason.add("aortic/mitral/tricuspid stenosis or regurgitation present (Step 16)");
         if(!this.stc)
             reason.add("Stroke/transient ischemic attack/carotid surgery/carotid angioplasty present (Step 17)");
