@@ -165,6 +165,36 @@ public class paragonTest {
             return true;
         }
     }
+    //Malignant stuff
+    
+    List<String> getScentencesWithWord(String input,String[] words){
+        List<String> op = new ArrayList<String>();
+        try {
+            
+            
+            String word_re = words[0];
+            String str = "";
+
+            for (int i = 1; i < words.length; i++) {
+                word_re += "|" + words[i];
+            }
+            word_re = "[^.]*\\b(" + word_re + ")\\b[^.]*[.]";
+            str = input;
+            Pattern re = Pattern.compile(word_re,
+                    Pattern.MULTILINE | Pattern.COMMENTS
+                    | Pattern.CASE_INSENSITIVE);
+            Matcher match = re.matcher(str);
+            String sentenceString = "";
+            while (match.find()) {
+                op.add(match.group(0));                
+            }
+        } catch (Exception e) {
+        }
+        return op;
+    }
+    
+    
+    
     
     //LVEF Stuff
     

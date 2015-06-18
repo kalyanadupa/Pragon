@@ -20,11 +20,13 @@ public class Patient {
     boolean apr;  // false if they are present
     boolean T_ICD; // Checks with Negation for transplant and ICD false if its present
     boolean cancer; // malignant & !prostate & !basal cell | returns false if condition is present
+    boolean bc;     // Checks if it has basal cell or prostate cancer. // true if present
     float bmi;
     boolean inpatient;
     int amt; // amt value changes from -1 to 0 or 1 for the first entry in TE. 0 = amt absent 1 = amt present 
     boolean stc;
     int sbp;
+    boolean cm; // Cardiomyopathy stuff (excl 11) // False if present
     labPatient lp;
     
     List<Float> lvef = new ArrayList<Float>();
@@ -36,11 +38,13 @@ public class Patient {
         this.apr = true;
         this.T_ICD = true;
         this.cancer = true;
+        this.bc = false;
         this.bmi = -1;
         this.amt = -1;
         this.stc = true;
         this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
+        this.cm = true;
     }
     
     public Patient(int id){
@@ -50,11 +54,13 @@ public class Patient {
         this.apr = true;
         this.T_ICD = true;
         this.cancer = true;
+        this.bc = false;
         this.bmi = -1;
         this.amt = -1;
         this.stc = true;
         this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
+        this.cm = true;
     }
     
     public Patient(int id,String crnt_ip) {
@@ -65,11 +71,13 @@ public class Patient {
         this.apr = true;
         this.T_ICD = true;
         this.cancer = true;
+        this.bc = false;
         this.bmi = -1;
         this.amt = -1;
         this.stc = true;
         this.sbp = -1;
         this.inpatient = true; //Change this to false if you need to use Step 12
+        this.cm = true;
     }
     
     public void patPrint(){
@@ -128,12 +136,14 @@ public class Patient {
         if(!this.inpatient)
             reason.add("Not inpatient with HF in last 9Months (Step 12)");
         if(!this.lp.med)
-            reason.add("No treatment with ACEI/Renin/ARB (Step 13)");
-        
+            reason.add("No treatment with ACEI/Renin/ARB (Step 13)");        
         if(!this.lp.diu)
             reason.add("No Diuretics ");
         if((this.lp.BPmedNo <3) && (this.sbp > 150))
             reason.add("BP value is high without medication (Step 15)");
+        if((this.lp.BPmedNo <3) && (this.sbp <111))
+            reason.add("BP value is low without medication (Step 15)");
+        
         
         if(this.amt == 1)
             reason.add("aortic/mitral/tricuspid stenosis or regurgitation present (Step 16)");

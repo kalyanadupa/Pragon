@@ -39,31 +39,19 @@ public class myXMLParser {
         FileReader fileReader = new FileReader(fileName);
         paragonTest pT = new paragonTest();
         // Always wrap FileReader in BufferedReader.
-        BufferedReader bufferedReader
-                = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-        PrintStream out = new PrintStream(new FileOutputStream("checkXMLParser.txt"));
-        System.setOut(out);
-        String bigString = "";
+        
+        StringBuilder stB = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.print(line);
-            System.out.print(" ");
+            stB.append(line + " " );
         }
 
-        fileName = "checkXMLParser.txt";
-        fileReader = new FileReader(fileName);
-
-        // Always wrap FileReader in BufferedReader.
-        bufferedReader = new BufferedReader(fileReader);
-
-        out = new PrintStream(new FileOutputStream("checkXMLParserOutput.txt"));
-        System.setOut(out);
-        String str = "";
 
 //        while ((str = bufferedReader.readLine()) != null) {
 //            System.out.println(Arrays.toString(getTagValues(str).toArray()));
 //        }
-        str = bufferedReader.readLine();
+        String str = stB.toString();
         List<String> tagValues = getTagValues(str);
         for (int i = 0; i < tagValues.size(); i = i + 2) {
             if (tagValues.get(i).equalsIgnoreCase("echo_text")) {
@@ -83,13 +71,21 @@ public class myXMLParser {
                     Patient px = patMap.get(currPat);
                     if(px.amt == -1){
                         if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
-                        px.amt = 1;
-                    }
-                    else{
-                        px.amt = 0;
-                    }
+                            px.amt = 1;
+                        }
+                        else{
+                            px.amt = 0;
+                        }
                     } 
                 }
+                //dilated cardiomyopathy, including peripartum cardiomyopathy, chemotherapy induced cardiomyopathy, or viral myocarditis
+                if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
+                    if(patMap.containsKey(currPat)){
+                        Patient px = patMap.get(currPat);
+                        px.cm = false;
+                    }
+                }
+                
                 
             }
         }
@@ -100,36 +96,25 @@ public class myXMLParser {
     }
     
     
-    public Map<Integer, Patient> parsePN(Map<Integer, Patient> patMap) throws FileNotFoundException, IOException, ParseException {
+    public Map<Integer, Patient> parsePN(Map<Integer, Patient> patMap) throws FileNotFoundException, IOException, ParseException, Exception {
         
         String fileName = "Dataset/Paragon Notes.xml";
         FileReader fileReader = new FileReader(fileName);
         paragonTest pT = new paragonTest();
         // Always wrap FileReader in BufferedReader.
-        BufferedReader bufferedReader
-                = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-        PrintStream out = new PrintStream(new FileOutputStream("checkXMLParser.txt"));
-        System.setOut(out);
-        String bigString = "";
+        
+        StringBuilder stB = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.print(line);
-            System.out.print(" ");
+            stB.append(line + " " );
         }
 
-        fileName = "checkXMLParser.txt";
-        fileReader = new FileReader(fileName);
 
-        // Always wrap FileReader in BufferedReader.
-        bufferedReader = new BufferedReader(fileReader);
-
-        out = new PrintStream(new FileOutputStream("checkXMLParserOutput.txt"));
-        System.setOut(out);
-        String str = "";
 //        while ((str = bufferedReader.readLine()) != null) {
 //            System.out.println(Arrays.toString(getTagValues(str).toArray()));
 //        }
-        str = bufferedReader.readLine();
+        String str = stB.toString();
         List<String> tagValues = getTagValuesPN(str);
         
         for (int i = 0; i < tagValues.size(); i = i + 2) {
@@ -153,7 +138,7 @@ public class myXMLParser {
                         px.apr = false;
                     }
                 }
-                else if ((pT.searchwithoutNegation(notesText, "stroke")) || (pT.searchwithoutNegation(notesText, "transitent ischemic attack")) || (pT.searchwithoutNegation(notesText, "carotid surgery")) || (pT.searchwithoutNegation(notesText, "carotid angioplasty")) ) {
+                if ((pT.searchwithoutNegation(notesText, "stroke")) || (pT.searchwithoutNegation(notesText, "transitent ischemic attack")) || (pT.searchwithoutNegation(notesText, "carotid surgery")) || (pT.searchwithoutNegation(notesText, "carotid angioplasty")) ) {
                     testDate td = new testDate();
                     if (td.nMonth(vDate) <= 3){
                         if (patMap.containsKey(currPat)) {
@@ -161,34 +146,46 @@ public class myXMLParser {
                             px.stc = false;
                         }
                     }
-                    
                 }
+                if ((pT.searchwithoutNegation(notesText, "prostate")) && (pT.searchwithoutNegation(notesText, "basal cell"))) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        px.bc = true;
+                    }
+                }
+                //dilated cardiomyopathy, including peripartum cardiomyopathy, chemotherapy induced cardiomyopathy, or viral myocarditis
+                if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis")) || (pT.searchwithoutNegation(notesText, "dilated cm")) || (pT.searchwithoutNegation(notesText, "peripartum cm")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cm")) ) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        px.cm = false;
+                    }
+                }
+ 
+                List<Float> temp = new ArrayList<Float>();
+                temp = pT.getLVEF(tagValues.get(i + 1), temp);
+                if (!temp.isEmpty()) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        temp.addAll(px.lvef);
+                        px.lvef = temp;
+                    }
+                }
+                
+                
+                
                 try{
                     List<String> sentences = getScentences(notesText);
                     for(String eachS : sentences){
-                        System.out.println(eachS); 
                        try{
-//                            if (pT.searchWithNegation(eachS, "transplant")) {
-//                                if (patMap.containsKey(currPat)) {
-//                                    Patient px = patMap.get(currPat);
-//                                    px.T_ICD = false;
-//                                }
-//                            } else if (pT.searchWithNegation(eachS, "ICD")) {
-//                                if (patMap.containsKey(currPat)) {
-//                                    Patient px = patMap.get(currPat);
-//                                    px.T_ICD = false;
-//                                }
-//                            }
-//                            if (pT.searchWithNegation(eachS, "implantable cardioverter defibrillator")) {
-//
-//                                if (patMap.containsKey(currPat)) {
-//                                    Patient px = patMap.get(currPat);
-//                                    px.T_ICD = false;
-//                                }
-//                            }
+                            if (pT.searchWithNegation(eachS, "transplant")) {
+                                if (patMap.containsKey(currPat)) {
+                                    Patient px = patMap.get(currPat);
+                                    px.T_ICD = false;
+                                }
+                            }    
 
                             // Checking for Cancer Step 8
-                            if ((pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
+                            if ((!pT.searchwithoutNegation(eachS, "screening"))&&(pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
                                 testDate td = new testDate();
                                 if (td.nMonth(vDate) <= 60) { // The month limit is taken as 60 because, it should be within last 5 years(60 months)
                                     if (patMap.containsKey(currPat)) {
@@ -197,6 +194,7 @@ public class myXMLParser {
                                     }
                                 }
                             }
+                            
                         }
                         catch(Exception ex){
                             //System.out.println("Error: " + eachS);
@@ -210,8 +208,6 @@ public class myXMLParser {
                 
             }
         }
-//        out = new PrintStream(new FileOutputStream("output.txt"));
-//        System.setOut(out);
         return patMap;
     }
     

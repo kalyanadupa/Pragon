@@ -37,7 +37,7 @@ public class mainParagon {
     static List<String> diuList = new ArrayList<String>();
     static List<String> BPMedList = new ArrayList<String>();
     static List<String> crnt; 
-    public static void main(String[] args) throws IOException, XMLStreamException, FileNotFoundException, ParseException {
+    public static void main(String[] args) throws IOException, XMLStreamException, FileNotFoundException, ParseException, Exception {
         
         medList = readMeds();
         diuList = readDiuretics();
@@ -49,6 +49,7 @@ public class mainParagon {
         System.out.println(sdf.format(cal.getTime()));
         System.out.println();
         myXMLParser mxp = new myXMLParser();
+        
         try {
             File inputFile = new File("Dataset/Paragon BMI and Other Vitals.xml");
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -72,8 +73,7 @@ public class mainParagon {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        out = new PrintStream(new FileOutputStream("delete.txt"));
-        System.setOut(out);
+
         
         
         // PPL Alternative - Stax Parser

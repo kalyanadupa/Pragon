@@ -135,6 +135,13 @@ public class PEncountersHandler extends DefaultHandler {
                     
                     
                 }
+                
+                if ((pT.searchWithNegation(dxName, "prostate")) && (pT.searchWithNegation(dxName, "basal cell"))) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        px.bc = true;
+                    }
+                }
                 if (vType.toLowerCase().contains("inpatient")) {
                     try {
                         testDate td = new testDate();
