@@ -147,7 +147,7 @@ public class myXMLParser {
                         }
                     }
                 }
-                if ((pT.searchwithoutNegation(notesText, "prostate")) && (pT.searchwithoutNegation(notesText, "basal cell"))) {
+                if ((pT.searchwithoutNegation(notesText, "prostate")) || (pT.searchwithoutNegation(notesText, "basal cell"))) {
                     if (patMap.containsKey(currPat)) {
                         Patient px = patMap.get(currPat);
                         px.bc = true;

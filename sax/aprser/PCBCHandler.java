@@ -27,6 +27,7 @@ public class PCBCHandler extends DefaultHandler {
     mainParagon mP = new mainParagon();
     
     Map<String, labPatient> labMap = mP.getLabMap();
+    Map<Integer, Patient> patMap = mP.getMap();
     String lab_ID = "NULL";
     String labName = "NULL";
     String strBMI = "NULL";
@@ -116,6 +117,7 @@ public class PCBCHandler extends DefaultHandler {
                         }
                     }
                     //AFRICAN AMERICAN
+                    
                     if ((labName.contains("GFR")) && (labName.toUpperCase().contains("AFRICAN AMERICAN")) ) {
                         if (px.gfr == -1) {
                             labValue = Float.parseFloat(strBMI);

@@ -127,7 +127,7 @@ public class PListHandler extends DefaultHandler {
                         px.cancer = false;
                     }
                 }
-                if ((pT.searchWithNegation(dxName, "prostate")) && (pT.searchWithNegation(dxName, "basal cell"))) {
+                if ((pT.searchWithNegation(dxName, "prostate")) || (pT.searchWithNegation(dxName, "basal cell"))) {
                     if (patMap.containsKey(currPat)) {
                         Patient px = patMap.get(currPat);
                         px.bc = true;

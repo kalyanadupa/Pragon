@@ -15,6 +15,7 @@ import java.util.List;
 public class Patient {
     int Pat_ID;
     String crnt;
+    String race;
     boolean HF; // true if heartt failure is present 
     boolean age; // true if age is >=55
     boolean apr;  // false if they are present
@@ -33,6 +34,7 @@ public class Patient {
     
     public Patient() {
         this.Pat_ID = -1;
+        this.race = "";
         this.HF = false;
         this.age = false;
         this.apr = true;
@@ -49,6 +51,7 @@ public class Patient {
     
     public Patient(int id){
         this.Pat_ID = id;
+        this.race = "";
         this.HF = false;
         this.age = false;
         this.apr = true;
@@ -66,6 +69,7 @@ public class Patient {
     public Patient(int id,String crnt_ip) {
         this.Pat_ID = id;
         this.crnt = crnt_ip;
+        this.race = "";
         this.HF = false;
         this.age = false;
         this.apr = true;
@@ -83,7 +87,7 @@ public class Patient {
     public void patPrint(){
         //System.out.println(entry.getKey()+ "/" + px.crnt  + "/" + px.age + "/" + px.HF + "/" + px.apr + "/" + px.T_ICD + "/" + bBmi + "/" + px.lvef.toString());
         List<String> reason = new ArrayList<String>();
-        
+        List<String> warning = new ArrayList<String>();
         if(!this.age)
             reason.add("Age < 55 (step 2)");
         if(!this.HF)
@@ -128,7 +132,7 @@ public class Patient {
 //            reason.add("BNP value missing");
         } else {
             if (this.lp.bnp < 50) {
-                reason.add("BNP < 50 (Step 11)");
+                warning.add("[WARNING] BNP < 50 (Step 11)");
             }
         }
         
@@ -143,12 +147,13 @@ public class Patient {
             reason.add("BP value is high without medication (Step 15)");
         if((this.lp.BPmedNo <3) && (this.sbp <111))
             reason.add("BP value is low without medication (Step 15)");
-        
-        
         if(this.amt == 1)
             reason.add("aortic/mitral/tricuspid stenosis or regurgitation present (Step 16)");
         if(!this.stc)
             reason.add("Stroke/transient ischemic attack/carotid surgery/carotid angioplasty present (Step 17)");
+        if(this.bc)
+            warning.add("[WARNING] May contain basal cell or prostate"); // To improve the performance of system remove basal cell condition from malignant condition
+        
         
 //        if(missing){
 //            System.out.println(this.Pat_ID + "\t" + this.crnt + "\t" + "VALUES MISSING" + "\t" + reason.toString());
@@ -159,13 +164,25 @@ public class Patient {
 //            System.out.println(this.Pat_ID + "\t" + this.crnt + "\t" + "ACCEPTED");
 //        else
 //            System.out.println(this.Pat_ID + "\t" + this.crnt + "\t" + "REJECTED" + "\t" + reason.toString());
-            
+        
+        
+        
             
         if(reason.isEmpty())
-            System.out.println(this.crnt + "\t" + "YES" );
-        else
-            System.out.println(this.crnt + "\t" + "NO" + "\t" + reason.toString());
-        
+            if(!warning.isEmpty())
+                System.out.println(this.crnt + "\t" + "YES" + "\t" + warning.toString());
+            else    
+                System.out.println(this.crnt + "\t" + "YES" );
+        else{
+            if((!warning.isEmpty()) && (reason.size() == 1) && (reason.get(0).contains("History of Malignancy"))){
+                reason.addAll(warning);
+                System.out.println(this.crnt + "\t" + "YES" + "\t" + reason.toString());
+            }
+            else{
+                reason.addAll(warning);
+                System.out.println(this.crnt + "\t" + "NO" + "\t" + reason.toString());
+            }
+        }
         
                 
         
