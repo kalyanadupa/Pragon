@@ -61,7 +61,7 @@ public class myXMLParser {
                 if(!temp.isEmpty()){
                     for(float t : temp){
                         if(t < 45)
-                            System.out.println("-----\n"+id+"\n--- "+t+" --\n"+tagValues.get(i+1));
+                            System.out.println("-----\n"+id+"\n--- "+t+" --\n");
                     }
                     if(patMap.containsKey(id)){
                         Patient px = patMap.get(id);
@@ -170,7 +170,7 @@ public class myXMLParser {
                 if (!temp.isEmpty()) {
                     for (float t : temp) {
                         if (t < 45) {
-                            System.out.println("-----\n" + currPat + "\n--- " + t + " --\n" + tagValues.get(i + 1));
+                            System.out.println("-----\n" + currPat + "\n--- " + t + " --\n" );
                         }
                     }
                     if (patMap.containsKey(currPat)) {

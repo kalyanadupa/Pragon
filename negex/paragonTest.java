@@ -197,94 +197,242 @@ public class paragonTest {
     
     
     //LVEF Stuff
-    
-    
-    public List<Float> getLVEF(String check1,List<Float> currLVEF){
-        check1 = check1.toLowerCase().replaceAll("\n", "");
-        Pattern p36 = Pattern.compile("(lvef|(ef)|(lv\\s*ejection\\s*fraction)|(left\\s*(ventricular|ventricle)\\s*ejection\\s*fraction)|(ejection\\s*fraction)).{1,85}((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))\\s*(\\%)");
+    public List<Float> getLVEF(String report,List<Float> currLVEF){
+        ArrayList<String> extractedValues = new ArrayList<>();
+
+        //Patterns
+        Pattern p1 = Pattern.compile("(left ventricular ejection fraction|lvef|lv ejection fraction|left ventricle ejection fraction|ejection fraction| ef|ejection frcation)[^_%\\.]*?([\\d-\\.]+)\\s*'?%");
+        String anatomy = "(left ventricular systolic function|left ventricular function|systolic function of the left ventricle|lv systolic function|left ventricular ejection fraction|ejection fraction|left ventricle)";
+        String expression = "(normal|normal global|low normal|well preserved|severely reduced|moderately reduced|moderately decreased|moderately depressed|severely decreased|severe|markedly decreased|markedly reduced|severely globally reduced|mildly reduced|mildly decreased|mildly depressed|severely depressed)";
+        Pattern p2 = Pattern.compile(anatomy + " [^_%\\.]*?" + expression);
+        Pattern p3 = Pattern.compile(expression + "[^A-Za-z]+" + anatomy); //example-The left ventricle is mildly dilated with normal (50-55%) ejection fraction
+		/*Pattern p3= Pattern.compile("lv ejection fraction .*? ([\\d-]+)(%?)");*/
+
+		//Pattern p4=Pattern.compile("(\\d+) ml");
+        // Code
+        String[] splits = report.split("\n\n");
+        for (String string : splits) {
+            //string = join(string.split("\\s*\n\\s*"), ' ');
+
+            //if(!string.contains("In summary, this is an abnormal echocardiogram with left ventricular enlargement, severe left ventricular systolic dysfunction")) continue;
+				/*if(string.contains("LV ejection fraction 50.0 % >= 55")){
+             System.out.println(string);
+             }*/
+            boolean found = false;
+            Matcher m = p1.matcher(string.toLowerCase());
+            while (m.find()) {
+                System.out.println(string + "\t" + m.group() + "\t" + m.group(1) + "\t" + m.group(2));
+                found = true;
+                extractedValues.add(m.group(2));
+            }
+
+            if (found) {
+                continue;
+            }
+            m = p2.matcher(string.toLowerCase());
+            while (m.find()) {
+                System.out.println(string + "\t" + m.group() + "\t" + m.group(1) + "\t" + m.group(2));
+                found = true;
+                extractedValues.add(m.group(2));
+            }
+
+            if (found) {
+                continue;
+            }
+            m = p3.matcher(string.toLowerCase());
+            while (m.find()) {
+                System.out.println(string + "\t" + m.group() + "\t" + m.group(2) + "\t" + m.group(1));
+                found = true;
+                extractedValues.add(m.group(1));
+            }
+
+        }
+
+        if (!extractedValues.isEmpty()) {
+            System.out.println("This1 " + extractedValues.toString());
+            extractedValues.add(inferLVEF(extractedValues));
+            System.out.println("This2 " + inferLVEF(extractedValues));
+        } else {
+//            report = join(report.split("\\s*\n\\s*"), ' ');
+
+            if (report.toLowerCase().matches(".*moderate (lv systolic dysfunction|left ventricular dysfunction|left ventricular systolic dysfunction).*")) {
+                //extractedValues.add("moderately decreased");
+                System.out.println("Extracted : " + extractedValues.toString());
+                extractedValues.add(inferLVEF(extractedValues));
+            } else if (report.toLowerCase().matches(".*(marked|severe) (lv systolic dysfunction|left ventricular dysfunction|left ventricular systolic dysfunction).*")) {
+                extractedValues.add("markedly reduced");
+                System.out.println("Extracted : " + extractedValues.toString());
+                extractedValues.add(inferLVEF(extractedValues));
+            }
+
+        }
         Pattern p37 = Pattern.compile("((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))(?=(\\s*(\\%)))");
         String check2 = " ";
-
-        if (check1.matches("(.*)((lvef)|(LVEF)|(ejection\\s*fraction)|(//sef//s))(.*)")) {
-            Matcher m36 = p36.matcher(check1);
-            while (m36.find()) {
-                check2 = check2 + "^^ " + m36.group();
-                //excelData[i][startIndexCol] = excelData[i][startIndexCol] + "\n" + "<OUTPUT>" + m36.group();
+        Matcher m37 = p37.matcher(check2);
+        
+        for(String str : extractedValues){
+            try {
+                Float f = Float.parseFloat(calculate(str));
+                if(f > 5)
+                    currLVEF.add(f);
+            } catch (NumberFormatException numberFormatException) {
+                System.out.println("** BIG ERROR ** " + str);
             }
-            Matcher m37 = p37.matcher(check2);
-            List<String> matchstring37 = new ArrayList<String>();
-            while (m37.find()) {
-                calculate(matchstring37, m37);
-            }
-
-            if (matchstring37 != null && !matchstring37.isEmpty()) {
-                for (String str : matchstring37) {
-                    try {
-                        currLVEF.add(Float.parseFloat(str));
-                    } catch (NumberFormatException numberFormatException) {
-                        System.out.println("** BIG ERROR ** " + str);
-                    }
-                }
-//                excelData[i][startIndexCol + 1] = matchstring37.toString() + "@" + Integer.toString(matchstring37.size());
-//                excelData[i][startIndexCol + 2] = Collections.max(matchstring37) + "," + Collections.min(matchstring37);
-//                excelData[i][startIndexCol + 3] = matchstring37.get(matchstring37.size() - 1);
-            }
-
+        }
+        if(!extractedValues.isEmpty()){
+            System.out.println("Final 1 "+extractedValues.toString());
+            System.out.println("Final 2 "+currLVEF.toString());
         }
         return currLVEF;
-        
     }
     
-    public static String getLVF(String check1) {
-        
-        List<Float> currLVEF = new ArrayList<Float>();
-        check1 = check1.toLowerCase().replaceAll("\n", "");
-        Pattern p36 = Pattern.compile("(lvef|(ef)|(lv\\s*ejection\\s*fraction)|(left\\s*(ventricular|ventricle)\\s*ejection\\s*fraction)|(ejection\\s*fraction)).{1,85}((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))\\s*(\\%)");
-        Pattern p37 = Pattern.compile("((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))(?=(\\s*(\\%)))");
-        String check2 = " ";
-        
-        if (check1.matches("(.*)((lvef)|(LVEF)|(ejection\\s*fraction)|(\\sef\\s))(.*)")) {
-            Matcher m36 = p36.matcher(check1);
-            while (m36.find()) {
-                check2 = check2 + "^^ " + m36.group();
-                //excelData[i][startIndexCol] = excelData[i][startIndexCol] + "\n" + "<OUTPUT>" + m36.group();
-            }
-            Matcher m37 = p37.matcher(check2);
-            List<String> matchstring37 = new ArrayList<String>();
-            while (m37.find()) {
-                calculate(matchstring37, m37);
-            }
-            
-            if (matchstring37 != null && !matchstring37.isEmpty()) {
-                for(String str: matchstring37){                    
-                    try {
-                        currLVEF.add(Float.parseFloat(str));
-                    } catch (NumberFormatException numberFormatException) {
-                        System.out.println("** BIG ERROR ** " + str);
-                    }
+    public String inferLVEF(ArrayList<String> extractedValues) {
+        if (extractedValues.size() > 0) {
+            //examples : 10, 10.5
+            for (String val : extractedValues) {
+                if (val.matches("\\d+(\\.\\d+)?")) {
+                    return val;
                 }
-//                excelData[i][startIndexCol + 1] = matchstring37.toString() + "@" + Integer.toString(matchstring37.size());
-//                excelData[i][startIndexCol + 2] = Collections.max(matchstring37) + "," + Collections.min(matchstring37);
-//                excelData[i][startIndexCol + 3] = matchstring37.get(matchstring37.size() - 1);
             }
-            
+
+            //examples : 10-15
+            for (String val : extractedValues) {
+                if (val.matches("\\d+(\\.\\d+)?-\\d+(\\.\\d+)?")) {
+                    String[] splits = val.split("-");
+                    return "" + (Float.parseFloat(splits[0]) + Float.parseFloat(splits[1])) / 2;
+                }
+            }
+
+            //examples : 10-
+            for (String val : extractedValues) {
+                if (val.matches("\\d+(\\.\\d+)?-")) {
+                    return val.substring(0, val.length() - 1);
+                }
+            }
+
+            //examples : -10
+            for (String val : extractedValues) {
+                if (val.matches("-\\d+(\\.\\d+)?")) {
+                    return val.substring(1);
+                }
+            }
+
+            for (String val : extractedValues) {
+                if (val.matches("markedly reduced|severely reduced|severely decreased|severely globally reduced|severe|severely depressed")) {
+                    return "" + 20;
+                }
+            }
+
+            for (String val : extractedValues) {
+                if (val.matches("moderately reduced|moderately decreased|moderately depressed|mildly depressed")) {
+                    return "" + 32.5;
+                }
+            }
+
+            for (String val : extractedValues) {
+                if (val.matches("normal|normal global|low normal|well preserved")) {
+                    return "" + 55;
+                }
+            }
+
+            for (String val : extractedValues) {
+                if (val.matches("mildly reduced|mildly decreased")) {
+                    return "" + 42.5;
+                }
+            }
+
+            return extractedValues.get(0);
         }
-        return currLVEF.toString();
+
+        return "";
 
     }
-    private static boolean calculate(List<String> matchstring, Matcher match) {
-        if ((match.group().contains("-") || match.group().contains("to"))
-                && !match.group().contains("[") && !match.group().contains("_")) {
-            String[] items = match.group().split("to|-");
+    
+//    public List<Float> getLVEF(String check1,List<Float> currLVEF){
+//        check1 = check1.toLowerCase().replaceAll("\n", "");
+//        Pattern p36 = Pattern.compile("(lvef|(ef)|(lv\\s*ejection\\s*fraction)|(left\\s*(ventricular|ventricle)\\s*ejection\\s*fraction)|(ejection\\s*fraction)).{1,85}((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))\\s*(\\%)");
+//        Pattern p37 = Pattern.compile("((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))(?=(\\s*(\\%)))");
+//        String check2 = " ";
+//
+//        if (check1.matches("(.*)((lvef)|(LVEF)|(ejection\\s*fraction)|(//sef//s))(.*)")) {
+//            Matcher m36 = p36.matcher(check1);
+//            while (m36.find()) {
+//                check2 = check2 + "^^ " + m36.group();
+//                //excelData[i][startIndexCol] = excelData[i][startIndexCol] + "\n" + "<OUTPUT>" + m36.group();
+//            }
+//            Matcher m37 = p37.matcher(check2);
+//            List<String> matchstring37 = new ArrayList<String>();
+//            while (m37.find()) {
+//                calculate(matchstring37, m37);
+//            }
+//
+//            if (matchstring37 != null && !matchstring37.isEmpty()) {
+//                for (String str : matchstring37) {
+//                    try {
+//                        currLVEF.add(Float.parseFloat(str));
+//                    } catch (NumberFormatException numberFormatException) {
+//                        System.out.println("** BIG ERROR ** " + str);
+//                    }
+//                }
+////                excelData[i][startIndexCol + 1] = matchstring37.toString() + "@" + Integer.toString(matchstring37.size());
+////                excelData[i][startIndexCol + 2] = Collections.max(matchstring37) + "," + Collections.min(matchstring37);
+////                excelData[i][startIndexCol + 3] = matchstring37.get(matchstring37.size() - 1);
+//            }
+//
+//        }
+//        return currLVEF;
+//        
+//    }
+    
+//    public static String getLVF(String check1) {
+//        
+//        List<Float> currLVEF = new ArrayList<Float>();
+//        check1 = check1.toLowerCase().replaceAll("\n", "");
+//        Pattern p36 = Pattern.compile("(lvef|(ef)|(lv\\s*ejection\\s*fraction)|(left\\s*(ventricular|ventricle)\\s*ejection\\s*fraction)|(ejection\\s*fraction)).{1,85}((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))\\s*(\\%)");
+//        Pattern p37 = Pattern.compile("((\\d+\\s*(\\-|to)\\s*\\d+)|(\\d*\\.\\d*\\s*(\\-|to)\\s*\\d*\\.\\d*)|(\\d*\\.\\d+)|(\\d+))(?=(\\s*(\\%)))");
+//        String check2 = " ";
+//        
+//        if (check1.matches("(.*)((lvef)|(LVEF)|(ejection\\s*fraction)|(\\sef\\s))(.*)")) {
+//            Matcher m36 = p36.matcher(check1);
+//            while (m36.find()) {
+//                check2 = check2 + "^^ " + m36.group();
+//                //excelData[i][startIndexCol] = excelData[i][startIndexCol] + "\n" + "<OUTPUT>" + m36.group();
+//            }
+//            Matcher m37 = p37.matcher(check2);
+//            List<String> matchstring37 = new ArrayList<String>();
+//            while (m37.find()) {
+//                calculate(matchstring37, m37);
+//            }
+//            
+//            if (matchstring37 != null && !matchstring37.isEmpty()) {
+//                for(String str: matchstring37){                    
+//                    try {
+//                        currLVEF.add(Float.parseFloat(str));
+//                    } catch (NumberFormatException numberFormatException) {
+//                        System.out.println("** BIG ERROR ** " + str);
+//                    }
+//                }
+////                excelData[i][startIndexCol + 1] = matchstring37.toString() + "@" + Integer.toString(matchstring37.size());
+////                excelData[i][startIndexCol + 2] = Collections.max(matchstring37) + "," + Collections.min(matchstring37);
+////                excelData[i][startIndexCol + 3] = matchstring37.get(matchstring37.size() - 1);
+//            }
+//            
+//        }
+//        return currLVEF.toString();
+//
+//    }
+    private String calculate(String matchstring) {
+        String[] items = matchstring.split("to|-");
+        if ((matchstring.contains("-") || matchstring.contains("to")) && !matchstring.contains("[") && !matchstring.contains("_") && (items.length >=2)) {
+            
             Float f1 = new Float(items[0]);
             Float f2 = new Float(items[1]);
             String ca = Float.toString((f1 + f2) / 2);
-            matchstring.add(Float.toString(f1));
-            matchstring.add(Float.toString(f2));
-            return true;
+            
+            return ca;
             //return matchstring.add(ca);
         } else {
-            return matchstring.add(match.group());
+            return matchstring;
         }
     }
     
@@ -295,7 +443,7 @@ public class paragonTest {
         
             
         
-        System.out.println(getLVF(doc.toLowerCase()));
+//        System.out.println(getLVF(doc.toLowerCase()));
 //        System.out.println("||"+doc+"||");
 //        if (searchWithNegation(doc,"cancer")) {
 //            System.out.println("Working");
