@@ -170,17 +170,17 @@ public class Patient {
             
         if(reason.isEmpty())
             if(!warning.isEmpty())
-                System.out.println(this.crnt + "\t" + "YES" + "\t" + warning.toString());
+                System.out.println(this.Pat_ID + "\t" + this.crnt + "\t" + "YES" + "\t" + warning.toString());
             else    
-                System.out.println(this.crnt + "\t" + "YES" );
+                System.out.println(this.Pat_ID + "\t" +this.crnt + "\t" + "YES" );
         else{
             if((!warning.isEmpty()) && (reason.size() == 1) && (reason.get(0).contains("History of Malignancy"))){
                 reason.addAll(warning);
-                System.out.println(this.crnt + "\t" + "YES" + "\t" + reason.toString());
+                System.out.println(this.Pat_ID + "\t" +this.crnt + "\t" + "YES" + "\t" + reason.toString());
             }
             else{
                 reason.addAll(warning);
-                System.out.println(this.crnt + "\t" + "NO" + "\t" + reason.toString());
+                System.out.println(this.Pat_ID + "\t" +this.crnt + "\t" + "NO" + "\t" + reason.toString());
             }
         }
         
