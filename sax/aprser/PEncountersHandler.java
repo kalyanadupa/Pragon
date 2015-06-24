@@ -21,7 +21,7 @@ public class PEncountersHandler extends DefaultHandler {
     boolean bpat_id = false;
     boolean bvType = false;
     boolean bvDate = false;
-    
+    boolean bEncType = false;
 //    boolean bNickName = false;
 //    boolean bMarks = false;
     
@@ -30,7 +30,7 @@ public class PEncountersHandler extends DefaultHandler {
     Map<Integer, Patient> patMap = mP.getMap();
     String pat_ID = "NULL";
     String vDate,vType ;
-
+    int encType;
     int currPat = 0;
     paragonTest pT = new paragonTest();
     
@@ -53,7 +53,9 @@ public class PEncountersHandler extends DefaultHandler {
         else if (qName.equalsIgnoreCase("contact_date")) {
             bvDate = true;
         } 
-
+        else if (qName.equalsIgnoreCase("enc_type_c")) {
+            bEncType = true;
+        }
     }
 
     @Override
@@ -80,92 +82,93 @@ public class PEncountersHandler extends DefaultHandler {
             bpat_id = false;
         } 
         else if (bdx_name) {
-            try {
-                String dxName = new String(ch, start, length);
-                // Checks or heart failure step 3
-                if (pT.hasHeartFailure(dxName)) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.HF = true;
-                    }
-                }
-               // Checks for transplant or ICD - step 7 
-                if (pT.searchWithNegation(dxName, "transplant")) {
-                    if((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556) )
-                        System.out.println(currPat + "\n"+dxName);
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.T_ICD = false;
-                    }
-                } else if (pT.searchWithNegation(dxName, "ICD")) {
-                    if((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556) )
-                        System.out.println(currPat + "\n"+dxName);
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.T_ICD = false;
-                    }
-                }
-                if (pT.searchWithNegation(dxName, "implantable cardioverter defibrillator")) {
-                    if ((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556)) {
-                        System.out.println(currPat);
-                        System.out.println(dxName);
-                    }
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.T_ICD = false;
-                    }
-                }
-                
-                // Checking for Cnacer Step 8
-                if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate"))  && (!pT.searchWithNegation(dxName, "basal cell")) ) {
-                    try {
-                        testDate td = new testDate();
-                        if (td.nMonth(vDate) <= 60) {
-
-                            if (patMap.containsKey(currPat)) {
-                                Patient px = patMap.get(currPat);
-                                px.cancer = false;
-                            }
+            if(encType != 202){ // encType = 202 means Procedure, Jess never checks the procedure
+                try {
+                    String dxName = new String(ch, start, length);
+                    // Checks or heart failure step 3
+                    if (pT.hasHeartFailure(dxName)) {
+                        if (patMap.containsKey(currPat)) {
+                            Patient px = patMap.get(currPat);
+                            px.HF = true;
                         }
-                    } catch (ParseException ex) {
-                        Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    // Checks for transplant or ICD - step 7 
+                    if (pT.searchWithNegation(dxName, "transplant")) {
+                        if ((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556)) {
+                            System.out.println(currPat + "\n" + dxName);
+                        }
+                        if (patMap.containsKey(currPat)) {
+                            Patient px = patMap.get(currPat);
+                            px.T_ICD = false;
+                        }
+                    } else if (pT.searchWithNegation(dxName, "ICD")) {
+                        if ((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556)) {
+                            System.out.println(currPat + "\n" + dxName);
+                        }
+                        if (patMap.containsKey(currPat)) {
+                            Patient px = patMap.get(currPat);
+                            px.T_ICD = false;
+                        }
+                    }
+                    if (pT.searchWithNegation(dxName, "implantable cardioverter defibrillator")) {
+                        if (patMap.containsKey(currPat)) {
+                            Patient px = patMap.get(currPat);
+                            px.T_ICD = false;
+                        }
                     }
                     
-                    
-                    
-                    
-                }
-                
-                if ((pT.searchWithNegation(dxName, "prostate")) || (pT.searchWithNegation(dxName, "basal cell"))) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.bc = true;
+                    if (pT.searchWithNegation(dxName, "cancer")) {
+                        if (patMap.containsKey(currPat)) {
+                            Patient px = patMap.get(currPat);
+                            px.cancer2 = false;
+                        }
                     }
-                }
-                if (vType.toLowerCase().contains("inpatient")) {
-                    try {
-                        testDate td = new testDate();
-                        if (td.nMonth(vDate) <= 9) {
-                            
-                            if (pT.hasHeartFailure(dxName)) {
+                    
+                    // Checking for Cnacer Step 8
+                    if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate")) && (!pT.searchWithNegation(dxName, "basal cell"))) {
+                        try {
+                            testDate td = new testDate();
+                            if (td.nMonth(vDate) <= 60) {
+
                                 if (patMap.containsKey(currPat)) {
                                     Patient px = patMap.get(currPat);
-                                    px.inpatient = true;
+                                    px.cancer = false;
                                 }
                             }
+                        } catch (ParseException ex) {
+                            Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (ParseException ex) {
-                        Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+
                     }
 
-                }
-                
-                // Checks for Cancer step 8
-                
-                
+                    if ((pT.searchWithNegation(dxName, "prostate")) || (pT.searchWithNegation(dxName, "basal cell"))) {
+                        if (patMap.containsKey(currPat)) {
+                            Patient px = patMap.get(currPat);
+                            px.bc = true;
+                        }
+                    }
+                    if (vType.toLowerCase().contains("inpatient")) {
+                        try {
+                            testDate td = new testDate();
+                            if (td.nMonth(vDate) <= 9) {
 
-            } catch (Exception ex) {
-                Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+                                if (pT.hasHeartFailure(dxName)) {
+                                    if (patMap.containsKey(currPat)) {
+                                        Patient px = patMap.get(currPat);
+                                        px.inpatient = true;
+                                    }
+                                }
+                            }
+                        } catch (ParseException ex) {
+                            Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+
+                // Checks for Cancer step 8
+                } catch (Exception ex) {
+                    Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             bdx_name = false;
         } 
@@ -177,6 +180,11 @@ public class PEncountersHandler extends DefaultHandler {
         else if (bvDate){
             vDate = new String(ch, start, length);
             bvDate = false;
+        }
+        else if (bEncType){
+            String t = new String(ch, start, length);
+            encType = Integer.parseInt(t);
+            bEncType = false;
         }
 
     }

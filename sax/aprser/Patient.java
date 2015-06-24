@@ -21,6 +21,7 @@ public class Patient {
     boolean apr;  // false if they are present
     boolean T_ICD; // Checks with Negation for transplant and ICD false if its present
     boolean cancer; // malignant & !prostate & !basal cell | returns false if condition is present
+    boolean cancer2; // check if any cancer term is present to warn | returns false if present
     boolean bc;     // Checks if it has basal cell or prostate cancer. // true if present
     float bmi;
     boolean inpatient;
@@ -40,6 +41,7 @@ public class Patient {
         this.apr = true;
         this.T_ICD = true;
         this.cancer = true;
+        this.cancer2 = true;
         this.bc = false;
         this.bmi = -1;
         this.amt = -1;
@@ -57,6 +59,7 @@ public class Patient {
         this.apr = true;
         this.T_ICD = true;
         this.cancer = true;
+        this.cancer2 = true;
         this.bc = false;
         this.bmi = -1;
         this.amt = -1;
@@ -75,6 +78,7 @@ public class Patient {
         this.apr = true;
         this.T_ICD = true;
         this.cancer = true;
+        this.cancer2 = true;
         this.bc = false;
         this.bmi = -1;
         this.amt = -1;
@@ -88,6 +92,7 @@ public class Patient {
         //System.out.println(entry.getKey()+ "/" + px.crnt  + "/" + px.age + "/" + px.HF + "/" + px.apr + "/" + px.T_ICD + "/" + bBmi + "/" + px.lvef.toString());
         List<String> reason = new ArrayList<String>();
         List<String> warning = new ArrayList<String>();
+        boolean warnLVEF = false; // Checks if LVEF value is 9999 at any time // 9999 is used as a flag to tell that the border value of 45 falls im the lvef 
         if(!this.age)
             reason.add("Age < 55 (step 2)");
         if(!this.HF)
@@ -96,9 +101,14 @@ public class Patient {
         for(float f : this.lvef){
             if(f < 45)
                 lvef = false;
+            if(f > 9998)
+                warnLVEF = true;
         }
-        if(!lvef)
+        if(warnLVEF)
+            warning.add("[WARNING] Check the LVEF Range");
+        else if(!lvef)
             reason.add("lvef < 45 (step 5)");
+            
         if(!this.apr)
             reason.add("Angioedema/Pancreatitis/Renal Artery stenosis  were present(step 6)");
         if(!this.T_ICD)
@@ -153,7 +163,10 @@ public class Patient {
             reason.add("Stroke/transient ischemic attack/carotid surgery/carotid angioplasty present (Step 17)");
         if(this.bc)
             warning.add("[WARNING] May contain basal cell or prostate"); // To improve the performance of system remove basal cell condition from malignant condition
-        
+        if (!this.cancer2) 
+            warning.add("[WARNING] May have cancer "); 
+        if(!this.cm)
+            reason.add("Cardiomyopathy - DCM/PCM/CCM/VMC");
         
 //        if(missing){
 //            System.out.println(this.Pat_ID + "\t" + this.crnt + "\t" + "VALUES MISSING" + "\t" + reason.toString());

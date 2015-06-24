@@ -14,7 +14,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class PTEntriesHandler extends DefaultHandler {
+public class ZPTEntriesHandler extends DefaultHandler {
 
     
     boolean bpat_id = false;
@@ -86,7 +86,7 @@ public class PTEntriesHandler extends DefaultHandler {
                 
                 
             } catch (Exception ex) {
-                Logger.getLogger(PTEntriesHandler.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ZPTEntriesHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
             bEText = false;
         } 

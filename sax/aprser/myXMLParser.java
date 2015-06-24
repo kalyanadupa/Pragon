@@ -157,6 +157,12 @@ public class myXMLParser {
                         px.bc = true;
                     }
                 }
+                if (pT.searchwithoutNegation(notesText, "cancer")) {
+                    if (patMap.containsKey(currPat)) {
+                        Patient px = patMap.get(currPat);
+                        px.cancer2 = false;
+                    }
+                }
                 //dilated cardiomyopathy, including peripartum cardiomyopathy, chemotherapy induced cardiomyopathy, or viral myocarditis
                 if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis")) || (pT.searchwithoutNegation(notesText, "dilated cm")) || (pT.searchwithoutNegation(notesText, "peripartum cm")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cm")) ) {
                     if (patMap.containsKey(currPat)) {

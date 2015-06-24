@@ -97,12 +97,19 @@ public class staxPL {
                                         px.T_ICD = false;
                                     }
                                 }
-                                if ((pT.searchWithNegation(dxName, "prostate")) && (pT.searchWithNegation(dxName, "basal cell"))) {
+                                if (pT.searchWithNegation(dxName, "cancer")) {
+                                    if (patMap.containsKey(currPat.Pat_ID)) {
+                                        Patient px = patMap.get(currPat.Pat_ID);
+                                        px.cancer2 = false;
+                                    }
+                                }
+                                if ((pT.searchwithoutNegation(dxName, "prostate")) && (pT.searchwithoutNegation(dxName, "basal cell"))) {
                                     if (patMap.containsKey(currPat)) {
                                         Patient px = patMap.get(currPat);
                                         px.bc = true;
                                     }
                                 }
+                                
 
                                 // Checking for Cnacer Step 8
                                 if(!vDate.isEmpty()){
