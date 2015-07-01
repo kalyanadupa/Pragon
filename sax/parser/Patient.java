@@ -3,7 +3,7 @@
  * To change this template file/choose Tools | Templates
  * and open the template in the editor.
  */
-package sax.aprser;
+package sax.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Patient {
     boolean bc;     // Checks if it has basal cell or prostate cancer. // true if present
     float bmi;
     boolean inpatient;
-    int amt; // amt value changes from -1 to 0 or 1 for the first entry in TE. 0 = amt absent 1 = amt present 
+    int amt; // amt value changes from -1 to 0 or 1 for the first entry in TE. 0 = amt absent 1 = amt present // Step 16 aortic mitral tricuspid
     boolean stc;
     int sbp;
     boolean cm; // Cardiomyopathy stuff (excl 11) // False if present

@@ -3,20 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sax.aprser;
+package sax.parser;
 
 /**
  *
  * @author aka324
  */
 public class labPatient {
-    String id;
-    float Hemoglobin;
-    float gfr;
-    float bnp;
-    boolean med;
-    boolean diu;
-    int BPmedNo;
+    String id;  // Current medical record number
+    float Hemoglobin;   // Hg Value
+    float gfr;  // GFR Value
+    float bnp;  // BNP Value
+    boolean med;    // Step 13, True if patient should be excluded
+    boolean diu; //Diuretics condition incl 4  
+    int BPmedNo;    // Number of BP medications patient is receiving 
     
     public labPatient(){
         this.id  = null;

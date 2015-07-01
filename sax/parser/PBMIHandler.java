@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sax.aprser;
+package sax.parser;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +29,7 @@ public class PBMIHandler extends DefaultHandler {
     int currPat = 0;
     paragonTest pT = new paragonTest();
     @Override
-    public void startElement(String uri,
-            String localName, String qName, Attributes attributes)
-            throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equalsIgnoreCase("Detail")) {
             
         } else if (qName.equalsIgnoreCase("pat_id")) {

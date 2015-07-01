@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sax.aprser;
+package sax.parser;
 
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.time;
 import java.io.BufferedReader;
@@ -31,10 +31,16 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class mainParagon {
     
+    
+    // Hash Map Patient ID -> Patient Class
     static Map<Integer, Patient> patMap = new HashMap<Integer, Patient>();
+    // Hash Map CRNT -> Lab Patient Class
     static Map<String, labPatient> labMap = new HashMap<String, labPatient>();
+    //List of Meds (ACE/ARB)
     static List<String> medList = new ArrayList<String>();
+    //List of Meds for Diuretics
     static List<String> diuList = new ArrayList<String>();
+    //List of BP Meds (Anti Hypersensitive drugs etc)
     static List<String> BPMedList = new ArrayList<String>();
     static List<String> crnt; 
     public static void main(String[] args) throws IOException, XMLStreamException, FileNotFoundException, ParseException, Exception {

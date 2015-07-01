@@ -1,4 +1,4 @@
-package sax.aprser;
+package sax.parser;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -113,7 +113,7 @@ public class staxPL {
 
                                 // Checking for Cnacer Step 8
                                 if(!vDate.isEmpty()){
-                                    if(td.nMonth(vDate) < 120){
+                                    if(td.nMonth(vDate) < 60){
                                         if ((pT.searchWithNegation(dxName, "malignant")) && (!pT.searchWithNegation(dxName, "prostate")) && (!pT.searchWithNegation(dxName, "basal cell"))) {
                                             if (patMap.containsKey(currPat.Pat_ID)) {
                                                 Patient px = patMap.get(currPat.Pat_ID);

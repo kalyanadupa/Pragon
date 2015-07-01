@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sax.aprser;
+package sax.parser;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class PMedHandler extends DefaultHandler {
     List<String> diuList = mP.getDiuList();
     List<String> BPMedList = mP.getBPList();
     List<String> crnt = mP.getCrnt();
-    String lab_ID = "NULL";
+    String crnt_ID = "NULL";
     String labGenName = "NULL";
     int index = 0;
     String currPat = crnt.get(index);
@@ -68,29 +68,29 @@ public class PMedHandler extends DefaultHandler {
             int start, int length) throws SAXException {
         
         if (blab_id) {
-            lab_ID = new String(ch, start, length);
-//            System.out.println("in Pat " + lab_ID);
+            crnt_ID = new String(ch, start, length);
+//            System.out.println("in Pat " + crnt_ID);
             
-//            if(labMap.containsKey(lab_ID))
-//                currPat = lab_ID;
+//            if(labMap.containsKey(crnt_ID))
+//                currPat = crnt_ID;
 //            else{
 //                labPatient pNew = new labPatient();
-//                pNew.id = lab_ID;
-//                labMap.put(lab_ID, pNew);
-//                currPat = lab_ID;
+//                pNew.id = crnt_ID;
+//                labMap.put(crnt_ID, pNew);
+//                currPat = crnt_ID;
 //            }
 
             blab_id = false;
         } 
         else if (bGenName) {
-            lab_ID = crnt.get(index);
-            if (labMap.containsKey(lab_ID)) {
-                currPat = lab_ID;
+            crnt_ID = crnt.get(index);
+            if (labMap.containsKey(crnt_ID)) {
+                currPat = crnt_ID;
             } else {
                 labPatient pNew = new labPatient();
-                pNew.id = lab_ID;
-                labMap.put(lab_ID, pNew);
-                currPat = lab_ID;
+                pNew.id = crnt_ID;
+                labMap.put(crnt_ID, pNew);
+                currPat = crnt_ID;
             }
             
             labGenName = new String(ch, start, length);

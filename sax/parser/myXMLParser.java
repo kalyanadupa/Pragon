@@ -1,4 +1,4 @@
-package sax.aprser;
+package sax.parser;
 
 
 import java.io.BufferedReader;
@@ -59,10 +59,10 @@ public class myXMLParser {
                 List<Float> temp = new ArrayList<Float>();
                 temp = pT.getLVEF(tagValues.get(i+1),temp);        
                 if(!temp.isEmpty()){
-                    for(float t : temp){
-                        if(t < 45)
-                            System.out.println("-----\n"+id+"\n--- "+t+" --\n");
-                    }
+//                    for(float t : temp){
+//                        if(t < 45)
+//                            System.out.println("-----\n"+id+"\n--- "+t+" --\n");
+//                    }
                     if(patMap.containsKey(id)){
                         Patient px = patMap.get(id);
                         temp.addAll(px.lvef);
@@ -174,11 +174,11 @@ public class myXMLParser {
                 List<Float> temp = new ArrayList<Float>();
                 temp = pT.getLVEF(tagValues.get(i + 1), temp);
                 if (!temp.isEmpty()) {
-                    for (float t : temp) {
-                        if (t < 45) {
-                            System.out.println("-----\n" + currPat + "\n--- " + t + " --\n" );
-                        }
-                    }
+//                    for (float t : temp) {
+//                        if (t < 45) {
+//                            System.out.println("-----\n" + currPat + "\n--- " + t + " --\n" );
+//                        }
+//                    }
                     if (patMap.containsKey(currPat)) {
                         Patient px = patMap.get(currPat);
                         temp.addAll(px.lvef);

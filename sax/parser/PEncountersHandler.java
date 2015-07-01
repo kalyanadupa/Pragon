@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sax.aprser;
+package sax.parser;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -94,17 +94,11 @@ public class PEncountersHandler extends DefaultHandler {
                     }
                     // Checks for transplant or ICD - step 7 
                     if (pT.searchWithNegation(dxName, "transplant")) {
-                        if ((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556)) {
-                            System.out.println(currPat + "\n" + dxName);
-                        }
                         if (patMap.containsKey(currPat)) {
                             Patient px = patMap.get(currPat);
                             px.T_ICD = false;
                         }
                     } else if (pT.searchWithNegation(dxName, "ICD")) {
-                        if ((currPat == 4123629) || (currPat == 1945618) || (currPat == 1464556)) {
-                            System.out.println(currPat + "\n" + dxName);
-                        }
                         if (patMap.containsKey(currPat)) {
                             Patient px = patMap.get(currPat);
                             px.T_ICD = false;

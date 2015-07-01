@@ -1,4 +1,4 @@
-package sax.aprser;
+package sax.parser;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

@@ -1,4 +1,4 @@
-package sax.aprser;
+package sax.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
