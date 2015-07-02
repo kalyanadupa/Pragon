@@ -264,26 +264,23 @@ public class myXMLParser {
     
     private static List<String> getTagValuesPN(final String str) {
         List<String> tagValues = new ArrayList<String>();
-        
-        Matcher matcher = Pattern.compile("<(pat_id)>(.+?)</pat_id>|<(contact_date)>(.+?)</contact_date>|<(note_text)>(.+?)</note_text>").matcher(str);
-        while (matcher.find()) {
-            
-            if (matcher.group(1) != null) {
-                tagValues.add(matcher.group(1));
-                tagValues.add(matcher.group(2));
-            }
-            else if(matcher.group(3)!= null){
-                tagValues.add(matcher.group(3));
-                tagValues.add(matcher.group(4));
-            }
-            else if(matcher.group(5)!= null){
-                tagValues.add(matcher.group(5));
-                tagValues.add(matcher.group(6));
+        Matcher matcher1 = Pattern.compile("<(note)>(.+?)</note>").matcher(str);
+        while(matcher1.find()){
+            Matcher matcher = Pattern.compile("<(pat_id)>(.+?)</pat_id>|<(contact_date)>(.+?)</contact_date>|<(note_text)>(.+?)</note_text>").matcher(matcher1.group(2));
+            while (matcher.find()) {
+
+                if (matcher.group(1) != null) {
+                    tagValues.add(matcher.group(1));
+                    tagValues.add(matcher.group(2));
+                } else if (matcher.group(3) != null) {
+                    tagValues.add(matcher.group(3));
+                    tagValues.add(matcher.group(4));
+                } else if (matcher.group(5) != null) {
+                    tagValues.add(matcher.group(5));
+                    tagValues.add(matcher.group(6));
+                }
             }
         }
-        
-        
-        
         return tagValues;
     }
     

@@ -21,14 +21,31 @@ import org.joda.time.Interval;
 public class testDate {
     
     public long nMonth(String strDate) throws ParseException{
+        if(strDate.contains("T")){
+            String[] tempTok = strDate.split("T");
+            strDate = tempTok[0];
+        }
+        System.out.println(strDate);
+            
         org.joda.time.Duration period = null ;
         try {
-//            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date dateStr = new Date();
             Date dNow = new Date();
-            dateStr = formatter.parse(strDate);
-            System.out.println(dateStr);
+            
+            SimpleDateFormat formatter;
+            if(checkFormat("yyyy-MM-dd",strDate)){
+                formatter = new SimpleDateFormat("yyyy-MM-dd");
+                dateStr = formatter.parse(strDate);
+            }    
+            else if(checkFormat("MM/dd/yyyy",strDate)){
+                formatter = new SimpleDateFormat("MM/dd/yyyy");
+                dateStr = formatter.parse(strDate);
+            }
+            else{
+                System.out.println("** Error in Date Parse " + strDate);
+                formatter = new SimpleDateFormat("MM/dd/yyyy");
+                dateStr = formatter.parse("01/01/1980"); // Excluding the patients cases in which dates are not available
+            }
             DateTime dt = new DateTime(dateStr);
             DateTime dtNow = new DateTime(dNow);
             Interval interval = new Interval(dt, dtNow);
@@ -41,25 +58,36 @@ public class testDate {
 //        int mYear = c.get(Calendar.YEAR);
 //        int mMonth = c.get(Calendar.MONTH);
 //        int mDay = c.get(Calendar.DAY_OF_MONTH);
-            return period.getStandardDays() / 30;
+            
         } catch (ParseException parseException) {
             System.out.println("** Error in Date Parse " + strDate);
-            SimpleDateFormat formatter = new SimpleDateFormat("mm/dd/YYYY");
-            Date dateStr = new Date();
-            Date dNow = new Date();
-            dateStr = formatter.parse("1/1/1980");
-            
-            DateTime dt = new DateTime(dateStr);
-            DateTime dtNow = new DateTime(dNow);
-            Interval interval = new Interval(dt, dtNow);
-            period = interval.toDuration();
-            return period.getStandardDays() / 30;
         }
+        return period.getStandardDays() / 30;
     }
+    
+    
+    // Doesn't work for formats like "2012-08-23T00:00:00" -- Fix it
+    public boolean checkFormat(String format, String value) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+//            ex.printStackTrace();
+        }
+        return date != null;
+    }
+
+    
     
     public static void main(String argsv[]) throws ParseException{
         testDate td = new testDate();
-        System.out.println(td.nMonth("2012-08-23T00:00:00"));
+//        System.out.println(nMonth("11/17/1994"));
+//        System.out.println("2012-08-23T00:00:00" + checkFormat("MM/dd/yyyy","2012-08-23"));
+        
     }
     
 }
