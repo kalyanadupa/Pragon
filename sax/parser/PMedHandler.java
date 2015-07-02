@@ -101,6 +101,7 @@ public class PMedHandler extends DefaultHandler {
                     for(String str : medList){
                         if(labGenName.contains(str.toLowerCase())){
                             px.med = true;
+                            px.medCount++;
                             break;
                         }                            
                     }

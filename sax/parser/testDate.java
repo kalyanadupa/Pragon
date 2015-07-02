@@ -50,14 +50,6 @@ public class testDate {
             DateTime dtNow = new DateTime(dNow);
             Interval interval = new Interval(dt, dtNow);
             period = interval.toDuration();
-
-//        long months = dateStr.getTime() - dNow.getTime();
-//        Calendar c = Calendar.getInstance();
-//
-//        c.setTimeInMillis(months);
-//        int mYear = c.get(Calendar.YEAR);
-//        int mMonth = c.get(Calendar.MONTH);
-//        int mDay = c.get(Calendar.DAY_OF_MONTH);
             
         } catch (ParseException parseException) {
             System.out.println("** Error in Date Parse " + strDate);
@@ -66,7 +58,6 @@ public class testDate {
     }
     
     
-    // Doesn't work for formats like "2012-08-23T00:00:00" -- Fix it
     public boolean checkFormat(String format, String value) {
         Date date = null;
         try {

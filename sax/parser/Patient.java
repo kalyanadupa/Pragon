@@ -149,8 +149,8 @@ public class Patient {
         
         if(!this.inpatient)
             reason.add("Not inpatient with HF in last 9Months (Step 12)");
-        if(!this.lp.med)
-            reason.add("No treatment with ACEI/Renin/ARB (Step 13)");        
+        if(this.lp.medCount >= 2)
+            reason.add("More than 2  ACEI/Renin/ARB (Step 13)");        
         if(!this.lp.diu)
             reason.add("No Diuretics ");
         if((this.lp.BPmedNo <3) && (this.sbp > 150))

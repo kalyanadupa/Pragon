@@ -15,6 +15,7 @@ public class labPatient {
     float gfr;  // GFR Value
     float bnp;  // BNP Value
     boolean med;    // Step 13, True if patient should be excluded
+    int medCount;
     boolean diu; //Diuretics condition incl 4  
     int BPmedNo;    // Number of BP medications patient is receiving 
     
@@ -24,6 +25,7 @@ public class labPatient {
         this.gfr = -1;
         this.Hemoglobin = -1;   
         this.med = false;
+        this.medCount = 0;
         this.diu = false;
         this.BPmedNo = 0;
     }
