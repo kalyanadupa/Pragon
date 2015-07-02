@@ -88,17 +88,19 @@ public class mainParagon {
         
         System.out.println("PPL  Done");
                 //Paragon Encounters
-        try {
-            File inputFile = new File("Dataset/Paragon Encounters.xml");
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            PEncountersHandler pEncountersHandler = new PEncountersHandler();
-            saxParser.parse(inputFile, pEncountersHandler);
-            patMap = pEncountersHandler.getMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("PE  Done");
+        //Remove Comment 
+        
+//        try {
+//            File inputFile = new File("Dataset/Paragon Encounters.xml");
+//            SAXParserFactory factory = SAXParserFactory.newInstance();
+//            SAXParser saxParser = factory.newSAXParser();
+//            PEncountersHandler pEncountersHandler = new PEncountersHandler();
+//            saxParser.parse(inputFile, pEncountersHandler);
+//            patMap = pEncountersHandler.getMap();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("PE  Done");
 
         
 //        //Paragon Notes 
@@ -116,7 +118,8 @@ public class mainParagon {
         
         
         // Alternative PN Approach 
-        patMap = mxp.parsePN(patMap);
+        //Remove comment below 
+//        patMap = mxp.parsePN(patMap);
         
         System.out.println("PN  Done");
         
@@ -148,8 +151,8 @@ public class mainParagon {
         
         // Another Alternate version of TE - Regex Parser
         
-        
-        patMap = mxp.parseTE(patMap);
+        //Remove comment to parse Text Entry
+//        patMap = mxp.parseTE(patMap);
         
         System.out.println("TE Done");
         
@@ -211,25 +214,27 @@ public class mainParagon {
         System.out.println("Pat ID" + "\t" + "crnt_mrn" + "\t" + "RESULT" + "\t" + "REASON");
         for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
             Patient px = entry.getValue();
+            System.out.println("Checking "+ px.Pat_ID + "/"+px.crnt);
             px.lp = labMap.get(px.crnt);
-//            px.patPrint();
+            System.out.println(px.lp.BPmedNo);
+            px.patPrint();
         }
         
         //Delete the following stuff 
         
-        String fileName = "tempMRN.txt";
-        FileReader fileReader = new FileReader(fileName);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line;
-        
-        while ((line = bufferedReader.readLine()) != null) {
-            for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
-                Patient px = entry.getValue();
-                if(px.crnt.contains(line)){
-                    px.patPrint();
-                }
-            }
-        }
+//        String fileName = "tempMRN.txt";
+//        FileReader fileReader = new FileReader(fileName);
+//        BufferedReader bufferedReader = new BufferedReader(fileReader);
+//        String line;
+//        
+//        while ((line = bufferedReader.readLine()) != null) {
+//            for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
+//                Patient px = entry.getValue();
+//                if(px.crnt.contains(line)){
+//                    px.patPrint();
+//                }
+//            }
+//        }
         
     }
     

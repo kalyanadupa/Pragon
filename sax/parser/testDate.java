@@ -25,7 +25,6 @@ public class testDate {
             String[] tempTok = strDate.split("T");
             strDate = tempTok[0];
         }
-        System.out.println(strDate);
             
         org.joda.time.Duration period = null ;
         try {
@@ -33,7 +32,15 @@ public class testDate {
             Date dNow = new Date();
             
             SimpleDateFormat formatter;
-            if(checkFormat("yyyy-MM-dd",strDate)){
+            if(checkFormat("yyyy-M-d",strDate)){
+                formatter = new SimpleDateFormat("yyyy-M-d");
+                dateStr = formatter.parse(strDate);
+            }    
+            else if(checkFormat("M/d/yyyy",strDate)){
+                formatter = new SimpleDateFormat("M/d/yyyy");
+                dateStr = formatter.parse(strDate);
+            }
+            else if(checkFormat("yyyy-MM-dd",strDate)){
                 formatter = new SimpleDateFormat("yyyy-MM-dd");
                 dateStr = formatter.parse(strDate);
             }    
@@ -43,7 +50,7 @@ public class testDate {
             }
             else{
                 System.out.println("** Error in Date Parse " + strDate);
-                formatter = new SimpleDateFormat("MM/dd/yyyy");
+                formatter = new SimpleDateFormat("M/d/yyyy");
                 dateStr = formatter.parse("01/01/1980"); // Excluding the patients cases in which dates are not available
             }
             DateTime dt = new DateTime(dateStr);
@@ -76,8 +83,8 @@ public class testDate {
     
     public static void main(String argsv[]) throws ParseException{
         testDate td = new testDate();
-//        System.out.println(nMonth("11/17/1994"));
-//        System.out.println("2012-08-23T00:00:00" + checkFormat("MM/dd/yyyy","2012-08-23"));
+//        System.out.println(nMonth("03/01/2005"));
+//        System.out.println("2012-08-23T00:00:00" + checkFormat("M/d/yyyy","2012-08-23"));
         
     }
     
