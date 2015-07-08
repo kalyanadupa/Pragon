@@ -26,9 +26,6 @@ import negex.paragonTest;
 
 public class staxPL {
 
-    public static void main(String[] args) {
-        
-    }
     public Map<Integer, Patient> parsePL(Map<Integer, Patient> patMap)  throws XMLStreamException, FileNotFoundException {
 //        List<Employee> empList = null;
         Patient currPat = null;

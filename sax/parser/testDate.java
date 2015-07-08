@@ -21,6 +21,8 @@ import org.joda.time.Interval;
 public class testDate {
     
     public long nMonth(String strDate) throws ParseException{
+        System.out.println(strDate);
+        
         if(strDate.contains("T")){
             String[] tempTok = strDate.split("T");
             strDate = tempTok[0];
@@ -65,6 +67,8 @@ public class testDate {
     }
     
     
+    
+    
     public boolean checkFormat(String format, String value) {
         Date date = null;
         try {
@@ -83,7 +87,7 @@ public class testDate {
     
     public static void main(String argsv[]) throws ParseException{
         testDate td = new testDate();
-//        System.out.println(nMonth("03/01/2005"));
+//        System.out.println(nMonth("546578"));
 //        System.out.println("2012-08-23T00:00:00" + checkFormat("M/d/yyyy","2012-08-23"));
         
     }

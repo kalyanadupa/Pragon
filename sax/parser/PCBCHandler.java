@@ -30,7 +30,7 @@ public class PCBCHandler extends DefaultHandler {
     Map<Integer, Patient> patMap = mP.getMap();
     String lab_ID = "NULL";
     String labName = "NULL";
-    String strBMI = "NULL";
+    String strValue = "NULL";
     String currPat = null;
     paragonTest pT = new paragonTest();
     @Override
@@ -87,8 +87,8 @@ public class PCBCHandler extends DefaultHandler {
             bName = false;            
         } 
         else if (bValue) {
-            strBMI = new String(ch, start, length);
-            strBMI = strBMI.replace(",", "");
+            strValue = new String(ch, start, length);
+            strValue = strValue.replace(",", "");
 //            System.out.println("Diagnosis Name: "
 //                    + dxName +" pi "+ lab_ID);     
             
@@ -112,7 +112,7 @@ public class PCBCHandler extends DefaultHandler {
                         testDate td = new testDate();
                         
                         if ((px.Hemoglobin == -1) && (td.nMonth(dt) <= 2)) {
-                            labValue = Float.parseFloat(strBMI);
+                            labValue = Float.parseFloat(strValue);
                             px.Hemoglobin = labValue;
                         }
                     }
@@ -120,21 +120,21 @@ public class PCBCHandler extends DefaultHandler {
                     
                     if ((labName.contains("GFR")) && (labName.toUpperCase().contains("AFRICAN AMERICAN")) ) {
                         if (px.gfr == -1) {
-                            labValue = Float.parseFloat(strBMI);
+                            labValue = Float.parseFloat(strValue);
                             if(labValue < 99999)
                                 px.gfr = labValue;
                         }
                     }
                     if ((labName.contains("BNP")) && (labName.toLowerCase().contains("natriuretic"))) {
                         if (px.bnp == -1) {
-                            labValue = Float.parseFloat(strBMI);
+                            labValue = Float.parseFloat(strValue);
                             px.bnp = labValue;
                         }
                     }
                 }
 
             } catch (NumberFormatException numberFormatException) {
-                System.out.println("***" + lab_ID + "/" + labName + "/" + strBMI);
+//                System.out.println("***" + lab_ID + "/" + labName + "/" + strValue);
             } catch (ParseException ex) {
                 Logger.getLogger(PCBCHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
