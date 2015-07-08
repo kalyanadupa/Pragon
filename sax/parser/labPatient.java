@@ -30,6 +30,17 @@ public class labPatient {
         this.BPmedNo = 0;
     }
     
+    public labPatient(String crnt){
+        this.id  = crnt;
+        this.bnp = -1;
+        this.gfr = -1;
+        this.Hemoglobin = -1;   
+        this.med = false;
+        this.medCount = 0;
+        this.diu = false;
+        this.BPmedNo = 0;
+    }
+    
     public void labPrint(){
         System.out.println(this.id+ "/" + this.Hemoglobin + "/" + this.gfr + "/" + this.bnp + "/" + this.med);
     }

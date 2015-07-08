@@ -214,9 +214,10 @@ public class mainParagon {
         System.out.println("Pat ID" + "\t" + "crnt_mrn" + "\t" + "RESULT" + "\t" + "REASON");
         for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
             Patient px = entry.getValue();
-            System.out.println("Checking "+ px.Pat_ID + "/"+px.crnt);
-            px.lp = labMap.get(px.crnt);
-            System.out.println(px.lp.BPmedNo);
+            if(labMap.containsKey(px.crnt))
+                px.lp = labMap.get(px.crnt);
+            else
+                px.lp = new labPatient(px.crnt);
             px.patPrint();
         }
         
