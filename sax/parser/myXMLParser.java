@@ -38,61 +38,40 @@ public class myXMLParser {
         String fileName = "Dataset/Paragon Text Entries.xml";
         FileReader fileReader = new FileReader(fileName);
         paragonTest pT = new paragonTest();
-        // Always wrap FileReader in BufferedReader.
+
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-        
-        StringBuilder stB = new StringBuilder();
+        Patient px  = new Patient();
+        String notesText;
         while ((line = bufferedReader.readLine()) != null) {
-            stB.append(line + " " );
-        }
-
-
-//        while ((str = bufferedReader.readLine()) != null) {
-//            System.out.println(Arrays.toString(getTagValues(str).toArray()));
-//        }
-        String str = stB.toString();
-        List<String> tagValues = getTagValues(str);
-        for (int i = 0; i < tagValues.size(); i = i + 2) {
-            if (tagValues.get(i).equalsIgnoreCase("echo_text")) {
-                Integer id = Integer.valueOf(tagValues.get(i-1));
-                List<Float> temp = new ArrayList<Float>();
-                temp = pT.getLVEF(tagValues.get(i+1),temp);        
-                if(!temp.isEmpty()){
-//                    for(float t : temp){
-//                        if(t < 45)
-//                            System.out.println("-----\n"+id+"\n--- "+t+" --\n");
-//                    }
-                    if(patMap.containsKey(id)){
-                        Patient px = patMap.get(id);
-                        temp.addAll(px.lvef);
-                        px.lvef = temp;
+            if(line.contains("<pat_id>")){
+                line = bufferedReader.readLine();
+                Integer currPat = Integer.valueOf(line);
+                if (patMap.containsKey(currPat))
+                    px = patMap.get(currPat);
+                else
+                    px = new Patient();
+            }
+            if(line.contains("<echo_text>")){
+                notesText = bufferedReader.readLine();
+                px.lvef = pT.getLVEF(notesText, px.lvef);
+                
+                if (px.amt == -1) {
+                    if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
+                        px.amt = 1;
+                    } else {
+                        px.amt = 0;
                     }
                 }
-                Integer currPat = Integer.valueOf(tagValues.get(i - 1));
-                String notesText = tagValues.get(i + 1);
-                if (patMap.containsKey(currPat)){
-                    Patient px = patMap.get(currPat);
-                    if(px.amt == -1){
-                        if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
-                            px.amt = 1;
-                        }
-                        else{
-                            px.amt = 0;
-                        }
-                    } 
-                }
-                //dilated cardiomyopathy, including peripartum cardiomyopathy, chemotherapy induced cardiomyopathy, or viral myocarditis
+                
                 if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
-                    if(patMap.containsKey(currPat)){
-                        Patient px = patMap.get(currPat);
-                        px.cm = false;
-                    }
+                    px.cm = false;
+                    
                 }
-                
-                
             }
         }
+
+
         
 //        out = new PrintStream(new FileOutputStream("output.txt"));
 //        System.setOut(out);
@@ -108,121 +87,84 @@ public class myXMLParser {
         // Always wrap FileReader in BufferedReader.
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-        
-        StringBuilder stB = new StringBuilder();
+        Patient px = new Patient();
+        String notesText;
+        String vDate = null;
         while ((line = bufferedReader.readLine()) != null) {
-            stB.append(line + " " );
-        }
-
-
-//        while ((str = bufferedReader.readLine()) != null) {
-//            System.out.println(Arrays.toString(getTagValues(str).toArray()));
-//        }
-        String str = stB.toString();
-        List<String> tagValues = getTagValuesPN(str);
-        
-        for (int i = 0; i < tagValues.size(); i = i + 2) {
-            if (tagValues.get(i).equalsIgnoreCase("note_text")) {
-                Integer currPat = Integer.valueOf(tagValues.get(i-3));
-                String notesText = tagValues.get(i+1);
-                String vDate = tagValues.get(i-1);
-                if (pT.searchwithoutNegation(notesText, "Angioedema")) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.apr = false;
-                    }
-                } else if (pT.searchwithoutNegation(notesText, "Pancreatitis")) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.apr = false;
-                    }
-                } else if (pT.searchwithoutNegation(notesText, "bilateral Renal artery stenosis")) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.apr = false;
-                    }
+            if (line.contains("<pat_id>")) {
+                line = bufferedReader.readLine();
+                Integer currPat = Integer.valueOf(line);
+                if (patMap.containsKey(currPat)) {
+                    px = patMap.get(currPat);
+                } else {
+                    px = new Patient();
                 }
-                if ((pT.searchwithoutNegation(notesText, "stroke")) || (pT.searchwithoutNegation(notesText, "transitent ischemic attack")) || (pT.searchwithoutNegation(notesText, "carotid surgery")) || (pT.searchwithoutNegation(notesText, "carotid angioplasty")) ) {
+                notesText = "";
+                vDate = null;
+            }
+            if(line.contains("<contact_date>"))
+                vDate = bufferedReader.readLine();
+            if (line.contains("<note_text>")) {
+                notesText = bufferedReader.readLine();
+                px.lvef = pT.getLVEF(notesText, px.lvef);
+                
+                if (pT.searchwithoutNegation(notesText, "Angioedema")  || pT.searchwithoutNegation(notesText, "Pancreatitis") || pT.searchwithoutNegation(notesText, "bilateral Renal artery stenosis")) {
+                        px.apr = false;
+                }
+
+                if ((pT.searchwithoutNegation(notesText, "stroke")) || (pT.searchwithoutNegation(notesText, "transitent ischemic attack")) || (pT.searchwithoutNegation(notesText, "carotid surgery")) || (pT.searchwithoutNegation(notesText, "carotid angioplasty"))) {
                     testDate td = new testDate();
-                    if (td.nMonth(vDate) <= 3){
-                        if (patMap.containsKey(currPat)) {
-                            Patient px = patMap.get(currPat);
+                    if(vDate != null){
+                        if (td.nMonth(vDate) <= 3) {
                             px.stc = false;
                         }
                     }
                 }
+                
                 if ((pT.searchwithoutNegation(notesText, "prostate")) || (pT.searchwithoutNegation(notesText, "basal cell"))) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
                         px.bc = true;
-                    }
                 }
                 if (pT.searchwithoutNegation(notesText, "cancer")) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
                         px.cancer2 = false;
-                    }
                 }
-                //dilated cardiomyopathy, including peripartum cardiomyopathy, chemotherapy induced cardiomyopathy, or viral myocarditis
-                if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis")) || (pT.searchwithoutNegation(notesText, "dilated cm")) || (pT.searchwithoutNegation(notesText, "peripartum cm")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cm")) ) {
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        px.cm = false;
-                    }
-                }
- 
-                List<Float> temp = new ArrayList<Float>();
-                temp = pT.getLVEF(tagValues.get(i + 1), temp);
-                if (!temp.isEmpty()) {
-//                    for (float t : temp) {
-//                        if (t < 45) {
-//                            System.out.println("-----\n" + currPat + "\n--- " + t + " --\n" );
-//                        }
-//                    }
-                    if (patMap.containsKey(currPat)) {
-                        Patient px = patMap.get(currPat);
-                        temp.addAll(px.lvef);
-                        px.lvef = temp;
-                    }
+
+                if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
+                    px.cm = false;
+
                 }
                 
-                
-                
-                try{
+                try {
                     List<String> sentences = getScentences(notesText);
-                    for(String eachS : sentences){
-                       try{
+                    for (String eachS : sentences) {
+                        try {
                             if (pT.searchWithNegation(eachS, "transplant")) {
-                                if (patMap.containsKey(currPat)) {
-                                    Patient px = patMap.get(currPat);
                                     px.T_ICD = false;
-                                }
-                            }    
+                            }
 
                             // Checking for Cancer Step 8
-                            if ((!pT.searchwithoutNegation(eachS, "screening"))&&(pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
+                            if ((!pT.searchwithoutNegation(eachS, "screening")) && (pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
                                 testDate td = new testDate();
                                 if (td.nMonth(vDate) <= 60) { // The month limit is taken as 60 because, it should be within last 5 years(60 months)
-                                    if (patMap.containsKey(currPat)) {
-                                        Patient px = patMap.get(currPat);
                                         px.cancer = false;
-                                    }
                                 }
                             }
-                            
-                        }
-                        catch(Exception ex){
+
+                        } catch (Exception ex) {
                             //System.out.println("Error: " + eachS);
                         }
                     }
-                    
-                }
-                catch (Exception ex) {
-                    Logger.getLogger(PEncountersHandler.class.getName() ).log(Level.SEVERE, null, ex);
+
+                } catch (Exception ex) {
+                    Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
             }
         }
+
+
+                
+            
+        
         return patMap;
     }
     
