@@ -264,7 +264,7 @@ public class myXMLParser {
     
     private static List<String> getTagValuesPN(final String str) {
         List<String> tagValues = new ArrayList<String>();
-        Matcher matcher1 = Pattern.compile("<(note)>(.+?)</note>").matcher(str);
+        Matcher matcher1 = Pattern.compile("<(Detail)>(.+?)</Detail>").matcher(str);
         while(matcher1.find()){
             Matcher matcher = Pattern.compile("<(pat_id)>(.+?)</pat_id>|<(contact_date)>(.+?)</contact_date>|<(note_text)>(.+?)</note_text>").matcher(matcher1.group(2));
             while (matcher.find()) {

@@ -21,8 +21,8 @@ import org.joda.time.Interval;
 public class testDate {
     
     public long nMonth(String strDate) throws ParseException{
-        System.out.println(strDate);
-        
+        Date dateStr = new Date();
+        Date dNow = new Date();
         if(strDate.contains("T")){
             String[] tempTok = strDate.split("T");
             strDate = tempTok[0];
@@ -30,8 +30,7 @@ public class testDate {
             
         org.joda.time.Duration period = null ;
         try {
-            Date dateStr = new Date();
-            Date dNow = new Date();
+            
             
             SimpleDateFormat formatter;
             if(checkFormat("yyyy-M-d",strDate)){
@@ -63,7 +62,13 @@ public class testDate {
         } catch (ParseException parseException) {
             System.out.println("** Error in Date Parse " + strDate);
         }
-        return period.getStandardDays() / 30;
+        catch(IllegalArgumentException e){
+            System.out.println("start date / End date"+ dateStr+ "/" + dNow);
+        }
+        if(period == null)
+            return 432;
+        else
+            return period.getStandardDays() / 30;
     }
     
     

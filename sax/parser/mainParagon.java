@@ -88,19 +88,19 @@ public class mainParagon {
         
         System.out.println("PPL  Done");
                 //Paragon Encounters
-        //Remove Comment 
         
-//        try {
-//            File inputFile = new File("Dataset/Paragon Encounters.xml");
-//            SAXParserFactory factory = SAXParserFactory.newInstance();
-//            SAXParser saxParser = factory.newSAXParser();
-//            PEncountersHandler pEncountersHandler = new PEncountersHandler();
-//            saxParser.parse(inputFile, pEncountersHandler);
-//            patMap = pEncountersHandler.getMap();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println("PE  Done");
+        
+        try {
+            File inputFile = new File("Dataset/Paragon Encounters.xml");
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+            PEncountersHandler pEncountersHandler = new PEncountersHandler();
+            saxParser.parse(inputFile, pEncountersHandler);
+            patMap = pEncountersHandler.getMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("PE  Done");
 
         
 //        //Paragon Notes 
@@ -118,8 +118,8 @@ public class mainParagon {
         
         
         // Alternative PN Approach 
-        //Remove comment below 
-//        patMap = mxp.parsePN(patMap);
+        
+        patMap = mxp.parsePN(patMap);
         
         System.out.println("PN  Done");
         
@@ -151,8 +151,8 @@ public class mainParagon {
         
         // Another Alternate version of TE - Regex Parser
         
-        //Remove comment to parse Text Entry
-//        patMap = mxp.parseTE(patMap);
+        
+        patMap = mxp.parseTE(patMap);
         
         System.out.println("TE Done");
         
