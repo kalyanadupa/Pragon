@@ -221,7 +221,7 @@ public class paragonTest {
             boolean found = false;
             Matcher m = p1.matcher(string.toLowerCase());
             while (m.find()) {
-                System.out.println(string + "\t" + m.group() + "\t" + m.group(1) + "\t" + m.group(2));
+//                System.out.println(string + "\t" + m.group() + "\t" + m.group(1) + "\t" + m.group(2));
                 found = true;
                 extractedValues.add(m.group(2));
             }
@@ -231,7 +231,7 @@ public class paragonTest {
             }
             m = p2.matcher(string.toLowerCase());
             while (m.find()) {
-                System.out.println(string + "\t" + m.group() + "\t" + m.group(1) + "\t" + m.group(2));
+//                System.out.println(string + "\t" + m.group() + "\t" + m.group(1) + "\t" + m.group(2));
                 found = true;
                 extractedValues.add(m.group(2));
             }
@@ -241,7 +241,7 @@ public class paragonTest {
             }
             m = p3.matcher(string.toLowerCase());
             while (m.find()) {
-                System.out.println(string + "\t" + m.group() + "\t" + m.group(2) + "\t" + m.group(1));
+//                System.out.println(string + "\t" + m.group() + "\t" + m.group(2) + "\t" + m.group(1));
                 found = true;
                 extractedValues.add(m.group(1));
             }
@@ -249,19 +249,19 @@ public class paragonTest {
         }
 
         if (!extractedValues.isEmpty()) {
-            System.out.println("This1 " + extractedValues.toString());
+//            System.out.println("This1 " + extractedValues.toString());
             extractedValues.add(inferLVEF(extractedValues));
-            System.out.println("This2 " + inferLVEF(extractedValues));
+//            System.out.println("This2 " + inferLVEF(extractedValues));
         } else {
 //            report = join(report.split("\\s*\n\\s*"), ' ');
 
             if (report.toLowerCase().matches(".*moderate (lv systolic dysfunction|left ventricular dysfunction|left ventricular systolic dysfunction).*")) {
                 //extractedValues.add("moderately decreased");
-                System.out.println("Extracted : " + extractedValues.toString());
+//                System.out.println("Extracted : " + extractedValues.toString());
                 extractedValues.add(inferLVEF(extractedValues));
             } else if (report.toLowerCase().matches(".*(marked|severe) (lv systolic dysfunction|left ventricular dysfunction|left ventricular systolic dysfunction).*")) {
                 extractedValues.add("markedly reduced");
-                System.out.println("Extracted : " + extractedValues.toString());
+//                System.out.println("Extracted : " + extractedValues.toString());
                 extractedValues.add(inferLVEF(extractedValues));
             }
 
@@ -276,12 +276,12 @@ public class paragonTest {
                 if(f > 5)
                     currLVEF.add(f);
             } catch (NumberFormatException numberFormatException) {
-                System.out.println("** BIG ERROR ** " + str);
+//                System.out.println("** BIG ERROR ** " + str);
             }
         }
         if(!extractedValues.isEmpty()){
-            System.out.println("Final 1 "+extractedValues.toString());
-            System.out.println("Final 2 "+currLVEF.toString());
+//            System.out.println("Final 1 "+extractedValues.toString());
+//            System.out.println("Final 2 "+currLVEF.toString());
         }
         return currLVEF;
     }

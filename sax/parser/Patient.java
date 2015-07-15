@@ -157,6 +157,7 @@ public class Patient {
             reason.add("BP value is high without medication (Step 15)");
         if((this.lp.BPmedNo <3) && (this.sbp <111))
             reason.add("BP value is low without medication (Step 15)");
+        
         if(this.amt == 1)
             reason.add("aortic/mitral/tricuspid stenosis or regurgitation present (Step 16)");
         if(!this.stc)

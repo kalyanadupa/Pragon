@@ -69,6 +69,7 @@ public class PListHandler extends DefaultHandler {
             else{
                 Patient pNew = new Patient(id);
                 
+                
                 patMap.put(id, pNew);
                 currPat = id;
             }
