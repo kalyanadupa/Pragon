@@ -49,25 +49,33 @@ public class myXMLParser {
                 Integer currPat = Integer.valueOf(line);
                 if (patMap.containsKey(currPat))
                     px = patMap.get(currPat);
-                else
-                    px = new Patient();
+                else{
+                    px = new Patient(currPat);
+                    patMap.put(currPat, px);
+                }
             }
             if(line.contains("<echo_text>")){
+                System.out.println(px.Pat_ID);
                 notesText = bufferedReader.readLine();
-                px.lvef = pT.getLVEF(notesText, px.lvef);
-                
-                if (px.amt == -1) {
-                    if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
-                        px.amt = 1;
-                    } else {
-                        px.amt = 0;
-                    }
-                }
-                
-                if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
-                    px.cm = false;
+                while (!notesText.contains("</echo_text>")) {
                     
+                    px.lvef = pT.getLVEF(notesText, px.lvef);
+
+                    if (px.amt == -1) {
+                        if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
+                            px.amt = 1;
+                        } else {
+                            px.amt = 0;
+                        }
+                    }
+
+                    if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
+                        px.cm = false;
+
+                    }
+                    notesText = bufferedReader.readLine();
                 }
+                
             }
         }
 
@@ -97,66 +105,76 @@ public class myXMLParser {
                 if (patMap.containsKey(currPat)) {
                     px = patMap.get(currPat);
                 } else {
-                    px = new Patient();
+                    px = new Patient(currPat);
+                    patMap.put(currPat, px);
                 }
-                notesText = "";
                 vDate = null;
             }
             if(line.contains("<contact_date>"))
                 vDate = bufferedReader.readLine();
             if (line.contains("<note_text>")) {
+                System.out.println(px.Pat_ID);
                 notesText = bufferedReader.readLine();
-                px.lvef = pT.getLVEF(notesText, px.lvef);
-                
-                if (pT.searchwithoutNegation(notesText, "Angioedema")  || pT.searchwithoutNegation(notesText, "Pancreatitis") || pT.searchwithoutNegation(notesText, "bilateral Renal artery stenosis")) {
-                        px.apr = false;
-                }
-
-                if ((pT.searchwithoutNegation(notesText, "stroke")) || (pT.searchwithoutNegation(notesText, "transitent ischemic attack")) || (pT.searchwithoutNegation(notesText, "carotid surgery")) || (pT.searchwithoutNegation(notesText, "carotid angioplasty"))) {
-                    testDate td = new testDate();
-                    if(vDate != null){
-                        if (td.nMonth(vDate) <= 3) {
-                            px.stc = false;
+                while(!notesText.contains("</note_text>")){
+                    
+                    if(notesText != null)
+                    if(!notesText.matches("\\s+")){
+                        px.lvef = pT.getLVEF(notesText, px.lvef);
+                        if (pT.searchwithoutNegation(notesText, "Angioedema") || pT.searchwithoutNegation(notesText, "Pancreatitis") || pT.searchwithoutNegation(notesText, "bilateral Renal artery stenosis")) {
+                            px.apr = false;
                         }
-                    }
-                }
-                
-                if ((pT.searchwithoutNegation(notesText, "prostate")) || (pT.searchwithoutNegation(notesText, "basal cell"))) {
-                        px.bc = true;
-                }
-                if (pT.searchwithoutNegation(notesText, "cancer")) {
-                        px.cancer2 = false;
-                }
 
-                if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
-                    px.cm = false;
-
-                }
-                
-                try {
-                    List<String> sentences = getScentences(notesText);
-                    for (String eachS : sentences) {
-                        try {
-                            if (pT.searchWithNegation(eachS, "transplant")) {
-                                    px.T_ICD = false;
-                            }
-
-                            // Checking for Cancer Step 8
-                            if ((!pT.searchwithoutNegation(eachS, "screening")) && (pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
-                                testDate td = new testDate();
-                                if (td.nMonth(vDate) <= 60) { // The month limit is taken as 60 because, it should be within last 5 years(60 months)
-                                        px.cancer = false;
+                        if ((pT.searchwithoutNegation(notesText, "stroke")) || (pT.searchwithoutNegation(notesText, "transitent ischemic attack")) || (pT.searchwithoutNegation(notesText, "carotid surgery")) || (pT.searchwithoutNegation(notesText, "carotid angioplasty"))) {
+                            testDate td = new testDate();
+                            if (vDate != null) {
+                                if (td.nMonth(vDate) <= 3) {
+                                    px.stc = false;
                                 }
+                            }
+                        }
+
+                        if ((pT.searchwithoutNegation(notesText, "prostate")) || (pT.searchwithoutNegation(notesText, "basal cell"))) {
+                            px.bc = true;
+                        }
+                        if (pT.searchwithoutNegation(notesText, "cancer")) {
+                            px.cancer2 = false;
+                        }
+
+                        if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
+                            px.cm = false;
+
+                        }
+
+                        try {
+                            List<String> sentences = getScentences(notesText);
+                            for (String eachS : sentences) {
+                                try {
+                                    if (pT.searchWithNegation(eachS, "transplant")) {
+                                        px.T_ICD = false;
+                                    }
+
+                                    // Checking for Cancer Step 8
+                                    if ((!pT.searchwithoutNegation(eachS, "screening")) && (pT.searchWithNegation(eachS, "malignant")) && (!pT.searchWithNegation(eachS, "prostate")) && (!pT.searchWithNegation(eachS, "basal cell"))) {
+                                        testDate td = new testDate();
+                                        if (td.nMonth(vDate) <= 60) { // The month limit is taken as 60 because, it should be within last 5 years(60 months)
+                                            px.cancer = false;
+                                        }
+                                    }
+
+                                } catch (Exception ex) {
+                                    //System.out.println("Error: " + eachS);
+                                }
+                                
                             }
 
                         } catch (Exception ex) {
-                            //System.out.println("Error: " + eachS);
+                            Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-
-                } catch (Exception ex) {
-                    Logger.getLogger(PEncountersHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    
+                    notesText = bufferedReader.readLine();
                 }
+
                 
             }
         }

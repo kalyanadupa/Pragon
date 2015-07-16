@@ -48,8 +48,8 @@ public class mainParagon {
         medList = readMeds();
         diuList = readDiuretics();
         BPMedList = readBPMeds();
-        PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
-        System.setOut(out);
+//        PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
+//        System.setOut(out);
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         System.out.println(sdf.format(cal.getTime()));
@@ -102,9 +102,7 @@ public class mainParagon {
         }
         System.out.println("PE  Done");
 
-        
-//        //Paragon Notes 
-        
+        //        //Paragon Notes 
 //        try {
 //            File inputFile = new File("Dataset/Paragon Notes.xml");
 //            SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -115,17 +113,15 @@ public class mainParagon {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        
-        
         // Alternative PN Approach 
-        
         patMap = mxp.parsePN(patMap);
-        
+
         System.out.println("PN  Done");
-        
+
 
         
-//        Text Entries - SAX Parser
+        
+        //        Text Entries - SAX Parser
 //        try {
 //            File inputFile = new File("Dataset/Paragon Text Entries.xml");
 //            SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -136,31 +132,17 @@ public class mainParagon {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        
-        
-        
-
-        
         // Alternate version of TE - Stax Parser:
-        
-        
 //        staxTE ste = new staxTE();
 //        patMap = ste.parseTE(patMap);
 //        
 //        System.out.println("TE  Done");
-        
         // Another Alternate version of TE - Regex Parser
-        
-        
         patMap = mxp.parseTE(patMap);
-        
+
         System.out.println("TE Done");
-        
-//        for (Map.Entry<Integer, Patient> entry : patMap.entrySet()) {
-//            Patient px = entry.getValue();
-//            
-//            System.out.println(entry.getKey()+ "/" + px.crnt  + "/" + px.age + "/" + px.HF + "/" + px.apr + "/" + px.T_ICD + "/" +  "/" + px.lvef.toString());
-//        }
+
+
         
 
         //Med

@@ -19,34 +19,12 @@ import negex.paragonTest;
  */
 public class temp {
     public static void main(String[] argsv) throws FileNotFoundException, IOException{
-        String fileName = "Dataset/Paragon Notes.xml";
-        FileReader fileReader = new FileReader(fileName);
-        paragonTest pT = new paragonTest();
-        // Always wrap FileReader in BufferedReader.
-        BufferedReader bufferedReader
-                = new BufferedReader(fileReader);
-        String line;
-        PrintStream out = new PrintStream(new FileOutputStream("checkXMLParser.txt"));
-        System.setOut(out);
-        String bigString = "";
-        while ((line = bufferedReader.readLine()) != null) {
-            System.out.print(line);
-            System.out.print(" ");
-        }
+        String report = " ,hey, ";
+//        report = " "+ report+ " ";
+        if(report.matches("[-!$%^&*()_+|~=`{}\\[\\]:\";'<>?,.\\/\\s]+hey[-!$%^&*()_+|~=`{}\\[\\]:\";'<>?,.\\/\\s]+"))
+            System.out.println("ifgye");
         
-        fileName = "checkXMLParser.txt";
-        fileReader = new FileReader(fileName);
-
-        // Always wrap FileReader in BufferedReader.
-        bufferedReader = new BufferedReader(fileReader);
-
-        out = new PrintStream(new FileOutputStream("checkXMLParserOutput.txt"));
-        System.setOut(out);
-        String[] str = bufferedReader.readLine().split("<\note>");
-        //prettyPrint(str);
-//        while ((str = bufferedReader.readLine()) != null) {
-//            System.out.println(Arrays.toString(getTagValues(str).toArray()));
-//        }
+        
     }
     public static void prettyPrint(String xml) {
         

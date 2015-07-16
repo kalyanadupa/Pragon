@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class PrettyPrintXML {
     public static void format(String filePath) throws IOException{
-        String fileName = "delete.xml";
-//        String fileName = filePath.replaceAll("\\+", " ");
+//        String fileName = "delete.xml";
+        String fileName = filePath.replaceAll("\\+", " ");
         FileWriter fileWriter = new FileWriter(fileName);
         String line = null;
         try {
