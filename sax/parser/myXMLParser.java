@@ -55,27 +55,28 @@ public class myXMLParser {
                 }
             }
             if(line.contains("<echo_text>")){
-                System.out.println(px.Pat_ID);
+//                System.out.println(px.Pat_ID);
+                String nT = "";
                 notesText = bufferedReader.readLine();
                 while (!notesText.contains("</echo_text>")) {
-                    
-                    px.lvef = pT.getLVEF(notesText, px.lvef);
-
-                    if (px.amt == -1) {
-                        if ((pT.searchwithoutNegation(notesText, "severe aortic stenosis")) || (pT.searchwithoutNegation(notesText, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
-                            px.amt = 1;
-                        } else {
-                            px.amt = 0;
-                        }
-                    }
-
-                    if ((pT.searchwithoutNegation(notesText, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
-                        px.cm = false;
-
-                    }
+                    if(notesText != null)
+                        if(!notesText.matches("\\s+"))
+                            nT = nT + notesText + " ";
                     notesText = bufferedReader.readLine();
                 }
-                
+                px.lvef = pT.getLVEF(nT, px.lvef);
+                if (px.amt == -1) {
+                    if ((pT.searchwithoutNegation(nT, "severe aortic stenosis")) || (pT.searchwithoutNegation(nT, "severe mitral stenosis")) || (pT.searchwithoutNegation(notesText, "severe tricuspid stenosis")) || (pT.searchwithoutNegation(notesText, "severe aortic regurgitation")) || (pT.searchwithoutNegation(notesText, "severe mitral regurgitation")) || (pT.searchwithoutNegation(notesText, "severe tricuspid regurgitation"))) {
+                        px.amt = 1;
+                    } else {
+                        px.amt = 0;
+                    }
+                }
+
+                if ((pT.searchwithoutNegation(nT, "dilated cardiomyopathy")) || (pT.searchwithoutNegation(nT, "peripartum cardiomyopathy")) || (pT.searchwithoutNegation(nT, "chemotherapy induced cardiomyopathy")) || (pT.searchwithoutNegation(notesText, "viral myocarditis"))) {
+                    px.cm = false;
+
+                }
             }
         }
 
@@ -113,7 +114,7 @@ public class myXMLParser {
             if(line.contains("<contact_date>"))
                 vDate = bufferedReader.readLine();
             if (line.contains("<note_text>")) {
-                System.out.println(px.Pat_ID);
+//                System.out.println(px.Pat_ID);
                 notesText = bufferedReader.readLine();
                 while(!notesText.contains("</note_text>")){
                     
@@ -133,7 +134,7 @@ public class myXMLParser {
                             }
                         }
 
-                        if ((pT.searchwithoutNegation(notesText, "prostate")) || (pT.searchwithoutNegation(notesText, "basal cell"))) {
+                        if (pT.searchwithoutNegation(notesText, "basal cell")) {
                             px.bc = true;
                         }
                         if (pT.searchwithoutNegation(notesText, "cancer")) {
@@ -196,52 +197,5 @@ public class myXMLParser {
         return allL;
     }
 
-    private List<String> getTagValues(final String str) {
-        List<String> tagValues = new ArrayList<String>();
-//        Matcher matcher = TAG_REGEX.matcher(str);
-//        while (matcher.find()) {
-//            tagValues.add(matcher.group(1));
-//            tagValues.add(matcher.group(2));
-//        }
-        
-        Matcher matcher = Pattern.compile("<(pat_id)>(.+?)</pat_id>|<(echo_text)>(.+?)</echo_text>").matcher(str);
-        while (matcher.find()) {
-            
-            if (matcher.group(1) != null) {
-                tagValues.add(matcher.group(1));
-                tagValues.add(matcher.group(2));
-            }
-            else if(matcher.group(3)!= null){
-                tagValues.add(matcher.group(3));
-                tagValues.add(matcher.group(4));
-            }
-        }
-        
-        
-        
-        return tagValues;
-    }
-    
-    private static List<String> getTagValuesPN(final String str) {
-        List<String> tagValues = new ArrayList<String>();
-        Matcher matcher1 = Pattern.compile("<(Detail)>(.+?)</Detail>").matcher(str);
-        while(matcher1.find()){
-            Matcher matcher = Pattern.compile("<(pat_id)>(.+?)</pat_id>|<(contact_date)>(.+?)</contact_date>|<(note_text)>(.+?)</note_text>").matcher(matcher1.group(2));
-            while (matcher.find()) {
-
-                if (matcher.group(1) != null) {
-                    tagValues.add(matcher.group(1));
-                    tagValues.add(matcher.group(2));
-                } else if (matcher.group(3) != null) {
-                    tagValues.add(matcher.group(3));
-                    tagValues.add(matcher.group(4));
-                } else if (matcher.group(5) != null) {
-                    tagValues.add(matcher.group(5));
-                    tagValues.add(matcher.group(6));
-                }
-            }
-        }
-        return tagValues;
-    }
     
 }

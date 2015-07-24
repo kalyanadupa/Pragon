@@ -106,7 +106,7 @@ public class Patient {
         }
         if(warnLVEF)
             warning.add("[WARNING] Check the LVEF Range");
-        else if(!lvef)
+        if(!lvef)
             reason.add("lvef < 45 (step 5)");
             
         if(!this.apr)
@@ -146,9 +146,11 @@ public class Patient {
             }
         }
         
+  
+        // The inpatient criteria was not considered -- Dr. Shah
+//        if(!this.inpatient)
+//            reason.add("Not inpatient with HF in last 9Months (Step 12)");
         
-        if(!this.inpatient)
-            reason.add("Not inpatient with HF in last 9Months (Step 12)");
         if(this.lp.medCount >= 2)
             reason.add("More than 2  ACEI/Renin/ARB Meds (Step 13)");        
         if(!this.lp.diu)

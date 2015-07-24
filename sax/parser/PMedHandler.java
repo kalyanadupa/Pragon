@@ -100,7 +100,6 @@ public class PMedHandler extends DefaultHandler {
                 if(!px.med){
                     for(String str : medList){
                         if(labGenName.contains(str.toLowerCase())){
-                            px.med = true;
                             px.medCount++;
                             break;
                         }                            
@@ -127,33 +126,33 @@ public class PMedHandler extends DefaultHandler {
         } 
         else if (bTradeName) {            
             String tradeName = new String(ch, start, length);
-            if (labMap.containsKey(currPat)) {
-                labPatient px = labMap.get(currPat);
-                if (!px.med) {
-                    for (String str : medList) {
-                        if (tradeName.toLowerCase().contains(str.toLowerCase())) {
-                            px.med = true;
-                            break;
-                        }
-                    }
-                }
-                if (!px.diu) {
-                    for (String str : diuList) {
-                        if (tradeName.contains(str.toLowerCase())) {
-                            px.diu = true;
-                            break;
-                        }
-                    }
-                }
-                if (px.BPmedNo < 4) {
-                    for (String str : BPMedList) {
-                        if (tradeName.contains(str.toLowerCase())) {
-                            px.BPmedNo++;
-                            break;
-                        }
-                    }
-                }
-            }
+//            if (labMap.containsKey(currPat)) {
+//                labPatient px = labMap.get(currPat);
+//                if (!px.med) {
+//                    for (String str : medList) {
+//                        if (tradeName.toLowerCase().contains(str.toLowerCase())) {
+//                            px.med = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//                if (!px.diu) {
+//                    for (String str : diuList) {
+//                        if (tradeName.contains(str.toLowerCase())) {
+//                            px.diu = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//                if (px.BPmedNo < 4) {
+//                    for (String str : BPMedList) {
+//                        if (tradeName.contains(str.toLowerCase())) {
+//                            px.BPmedNo++;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
             bTradeName = false;
         }
 

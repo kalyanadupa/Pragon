@@ -95,8 +95,8 @@ public class paragonTest {
     }
 
     public boolean searchwithoutNegation(String doc,String query){
-        doc = " "+doc+" ";
-
+        String doc1 = " "+doc+" ";
+        doc = doc1.replaceAll("\\p{Punct}|\\d", " ").toLowerCase(); // change it to a proper format later
        String[] words =  query.toLowerCase().split(" ");
        if(words.length == 1){
            Pattern p1 = Pattern.compile("\\s+"+words[0] +"\\s+");
@@ -137,7 +137,8 @@ public class paragonTest {
     }
 
     public boolean searchWithNegation(String doc,String query) throws FileNotFoundException, Exception{
-        doc = " "+ doc.toLowerCase()+ " ";
+        String doc1 = " "+ doc.toLowerCase()+ " ";
+        doc = doc1.replaceAll("\\p{Punct}|\\d", " ").toLowerCase();
         query = query.toLowerCase();
         if(!searchwithoutNegation(doc,query)){
             return false;
@@ -197,7 +198,7 @@ public class paragonTest {
 
 
     //LVEF Stuff
-    public static List<Float> getLVEF(String report,List<Float> currLVEF){
+    public  static  List<Float> getLVEF(String report,List<Float> currLVEF){
         try{
             ArrayList<String> extractedValues = new ArrayList<>();
             report = " " + report.toLowerCase() + " ";
@@ -292,7 +293,7 @@ public class paragonTest {
         return currLVEF;
     }
 
-    public static String inferLVEF(ArrayList<String> extractedValues) {
+    public  static  String inferLVEF(ArrayList<String> extractedValues) {
         if (extractedValues.size() > 0) {
             //examples : 10, 10.5
             for (String val : extractedValues) {
@@ -377,159 +378,26 @@ public class paragonTest {
 
 
     public static void main(String[] args) throws Exception{
-        String doc = "REPORT:\n"
-                + " Accession/Order Number:EC110010822\n"
-                + " Exam           05/25/2011 15:24\n"
-                + " Date:\n"
-                + " Ht           191    Wt           96     BSA   2.26\n"
-                + " (cm):               (kg):\n"
-                + " Ordering Physician:        GORDON, AMY  \n"
-                + " Attending Physician:       HOLLY, THOMAS A. MD\n"
-                + " Fellow Physician:          Schimmel, Daniel, MD\n"
-                + " Technologist               VASSALLO MD, PATRICIA\n"
+        String doc = "IMPRESSIONS & COMMENTS: The patient underwent \n"
+                + "two-dimensional and M-mode transthoracic \n"
+                + "echocardiography with contrast using conventional \n"
+                + "imaging planes at the patient's bedside. \n"
                 + "\n"
-                + " Procedure CPT:     93312 93325 93320 93312 \n"
-                + " Indications          Atrial fibrillation\n"
-                + "\n"
-                + " ICD                  427.31\n"
-                + " Codes:\n"
-                + "       141     /   95            105\n"
-                + "\n"
-                + " Contrast:                           Total Dose \n"
-                + "                                     (mL):\n"
-                + " Technical ?Quality:                                               Rhythm:\n"
-                + " BASIC MEASUREMENTS\n"
-                + "                                  Actual     Normal    Indexed        Normal\n"
-                + "                                  Pt Value   Value     Pt Value       Indexed Value\n"
-                + " LV Size-end systole                     cm 2.3-3.4 cm\n"
-                + " LV size-end diastole                    cm 3.5-5.1 cm          cm/m?  2.1-2.7 cm/m?\n"
-                + " LV ejection fraction             35-    %  &gt;= 55%\n"
-                + "\n"
-                + " LV post wall thick-diastole             cm 0.65-1.1 cm\n"
-                + " IV septal wall thick-diastole           cm 0.5-1.0 cm\n"
-                + " Aortic Root Dia.                        cm 2.0-3.7 cm          cm/m?  &lt; 2.0 cm/m?\n"
-                + " Aortic Cusp Separation                  cm 1.5-2.6 cm\n"
-                + " LVOT Diameter\n"
-                + "\n"
-                + " LA Diameter                             cm 1.9-4.0 cm          cm/m?  &lt;= 2.1 cm/m?\n"
-                + " LA Volume                                                      mL/m?  22 +- mL/m?\n"
-                + "\n"
-                + "\n"
-                + " DOPPLER\n"
-                + " TV Peak Velocity                  269 cm/s              \n"
-                + "\n"
-                + "\n"
-                + " Proc. Components\n"
-                + " A transesophageal echocardiogram, Doppler study (pulsed, continuous \n"
-                + " wave, spectral and color flow) and contrast study were performed.  \n"
-                + " After obtaining informed written consent, the patient's posterior \n"
-                + " oropharynx was anesthetized utilizing viscous lidocaine gargle as well \n"
-                + " as Exactacain spray. The patient was given a total of 4 mg of Versed \n"
-                + " and 100 mcg of fentanyl in incremental doses throughout the study for \n"
-                + " conscious sedation.  Conscious sedation and the transesophageal \n"
-                + " echocardiogram procedure were performed by the cardiology fellow, Dr. \n"
-                + " Dan Schimmel under direct attending supervision. A multiplane \n"
-                + " transesophageal echocardiogram probe was inserted and advanced to 45 cm \n"
-                + " from the incisors.  Transgastric as well as transesophageal images were \n"
-                + " obtained.  The probe was then rotated to 180 degrees and interrogation \n"
-                + " of the descending aorta was performed during a pullback maneuver. \n"
-                + " Several transthoracic images were also taken. The patient tolerated the \n"
-                + " procedure well.  Periprocedural monitoring was performed by the nurse, \n"
-                + " Maria Davila, RN.  There were no procedure or post procedure \n"
-                + " complications noted.. The patient was observed in the echocardiography \n"
-                + " laboratory for 75 minutes after the procedure and was discharged in \n"
-                + " stable condition. \n"
-                + "\n"
-                + " FINDINGS\n"
-                + "\n"
-                + " Left Ventricle (LV)\n"
-                + " Left ventricular size is normal. Left ventricular systolic function is \n"
-                + " moderately reduced. Visually estimated LV ejection fraction is 35-40%. \n"
-                + " There is significant beat to beat variation due to underlying atrial \n"
-                + " fibrillation. In addition, the patient was tachycardic throughout the \n"
-                + " study. \n"
-                + "\n"
-                + " Right Ventricle (RV)\n"
-                + " The right ventricle is mildly dilated. Right ventricular systolic \n"
-                + " function is reduced. \n"
-                + "\n"
-                + " Left Atrium (LA)\n"
-                + " The left atrium is dilated. \n"
-                + "\n"
-                + " Right Atrium (RA)\n"
-                + " The right atrium is dilated. \n"
-                + "\n"
-                + " LA \n"
-                + " Appendage\n"
-                + " The left atrial appendage is free of thrombus. The left atrial \n"
-                + " appendage emptying velocity is decreased at 24 cm/s, which indicates \n"
-                + " high thrombotic potential. \n"
-                + "\n"
-                + " IA \n"
-                + " Septum\n"
-                + " There is no evidence of interatrial communication by color Doppler or \n"
-                + " bubble contrast study. \n"
-                + "\n"
-                + " Hemodynamic\n"
-                + "\n"
-                + " The pulmonary artery systolic pressure is estimated to be 30 mmHg plus \n"
-                + " right atrial pressure.\n"
-                + "\n"
-                + " Aortic \n"
-                + " Valve\n"
-                + " The aortic valve is tri-leaflet. The aortic valve opens well. There is \n"
-                + " no aortic regurgitation. There is no evidence of aortic stenosis. \n"
-                + "\n"
-                + " Mitral \n"
-                + " Valve\n"
-                + " Mitral valve leaflets are thickened but open well. Mild mitral \n"
-                + " regurgitation is present. There is no evidence of mitral stenosis. \n"
-                + "\n"
-                + " Tricuspid Valve\n"
-                + " The tricuspid valve is normal in structure and function. There is \n"
-                + " moderate tricuspid regurgitation. \n"
-                + "\n"
-                + " Pulmonic Valve\n"
-                + " The pulmonic valve is not well visualized, but grossly normal. There is \n"
-                + " trace pulmonic regurgitation. \n"
-                + "\n"
-                + " Great \n"
-                + " Vessels\n"
-                + " The aortic root diameter at the sinus of Valsalva is upper normal and \n"
-                + " measures 3.8 cm. The proximal ascending aorta diameter is mildly \n"
-                + " increased and measures 4.0 cm. The descending thoracic aorta diameter \n"
-                + " is normal. There is no significant atherosclerosis.\n"
-                + "\n"
-                + " Pericardiu\n"
-                + "\n"
-                + " There is no pericardial effusion. \n"
-                + " CONCLUSIONS\n"
-                + " Left ventricular size is normal. Left ventricular systolic function is \n"
-                + " moderately reduced. Visually estimated LV ejection fraction is 35-40%. \n"
-                + " There is significant beat to beat variation due to underlying atrial \n"
-                + " fibrillation. In addition, the patient was tachycardic throughout the \n"
-                + " study. \n"
-                + " The right ventricle is mildly dilated. Right ventricular systolic \n"
-                + " function is reduced. \n"
-                + " There is biatrial dilation.The left atrial appendage is free of \n"
-                + " thrombus.\n"
-                + " Mitral valve leaflets are thickened but open well. Mild mitral \n"
-                + " regurgitation is present.\n"
-                + " There is moderate tricuspid regurgitation.\n"
-                + " The aortic root diameter at the sinus of Valsalva is upper normal and \n"
-                + " measures 3.8 cm. The proximal ascending aorta diameter is mildly \n"
-                + " increased and measures 4.0 cm.\n"
-                + " No other study is available for comparison. \n"
-                + " Marc2173\n"
-                + "\n"
-                + "\n"
-                + " Patricia Vassallo MD\n"
-                + "\n"
-                + " (Electronically Signed)\n"
-                + "\n"
-                + " Final            25 May 2011 17:11\n"
-                + " Date:\n"
-                + " Northwestern Memorial Hospital Cardiac Graphics Lab is Accredited by The ICAEL.";
+                + "Left ventricular structure and function is compatible \n"
+                + "with concentric left ventricular hypertrophy. Left \n"
+                + "ventricular internal dimensions are normal. Left \n"
+                + "ventricular contractility is low normal. There are no \n"
+                + "areas of akinesis, dyskinesis or major degrees of \n"
+                + "hypokinesis. The estimated ejection fraction is \n"
+                + "approximately 40%. Mitral valve structure and function\n"
+                + "reveals thickening of the mitral leaflets with normal \n"
+                + "motion pattern. The left atrium is structurally \n"
+                + "normal. Aortic valve structure and function is normal.\n"
+                + "Atherosclerotic changes are noted in the ascending \n"
+                + "aorta. Right ventricular size, structure and function,\n"
+                + "tricuspid valve structure and function and right \n"
+                + "atrial structure are normal. A small concentric \n"
+                + "pericardial effusion is present.";
 
         List<Float> tempL = new ArrayList<Float>();
         

@@ -28,22 +28,22 @@ public class PrettyPrintXML {
             BufferedWriter bufferedWriter =  new BufferedWriter(fileWriter);
             int value =0;
 
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
-            }
-            System.out.println(value);
-            
-            
-//            while ((value = bufferedReader.read()) != -1) {
-//                char c = (char) value;
-//                if(c == '<')
-//                    bufferedWriter.write("\n<");
-//                else if(c == '>')
-//                    bufferedWriter.write(">\n");
-//                else
-//                    bufferedWriter.write(c);
+//            while ((line = bufferedReader.readLine()) != null) {
+//                System.out.println(line);
 //            }
-//            
+//            System.out.println(value);
+            
+            
+            while ((value = bufferedReader.read()) != -1) {
+                char c = (char) value;
+                if(c == '<')
+                    bufferedWriter.write("\n<");
+                else if(c == '>')
+                    bufferedWriter.write(">\n");
+                else
+                    bufferedWriter.write(c);
+            }
+            
             
 
             
@@ -108,6 +108,6 @@ public class PrettyPrintXML {
     
     
     public static void main(String[] argsv) throws IOException{
-        format("Dataset/Paragon Notes.xml");
+        format("Dataset/Paragon+Text+Entries.xml");
     }
 }

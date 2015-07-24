@@ -88,14 +88,7 @@ public class PCBCHandler extends DefaultHandler {
         } 
         else if (bValue) {
             strValue = new String(ch, start, length);
-            strValue = strValue.replace(",", "");
-//            System.out.println("Diagnosis Name: "
-//                    + dxName +" pi "+ lab_ID);     
-            
-            
-            
-                
-            
+            strValue = strValue.replace(",", "");  
             bValue = false;
         }
         else if (bDate) {
